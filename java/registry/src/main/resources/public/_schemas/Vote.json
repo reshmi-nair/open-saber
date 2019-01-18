@@ -1,0 +1,52 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "type": "object",
+  "$comment": "Vote schema definition",
+  "properties": {
+    "votes": {
+      "$ref": "#/definitions/Vote"
+    }
+  },
+  "title":"votes",
+  "_osConfig": {
+         "osComment": "Refer to _osconfig $comment section of Teacher.json",
+         "privateFields": [],
+         "signedFields": []
+  },
+  "definitions": {
+    "Vote": {
+      "$id": "#/properties/Vote",
+      "type": "object",
+      "title": "Vote for the devcon",
+      "required": [
+        "timestamp",
+        "ideaId",
+        "nCoins"
+      ],
+      "properties": {
+        "timestamp": {
+          "$id": "#/properties/timestamp",
+          "type": "string",
+          "format": "date-time",
+          "examples": [
+            "2017-09-23T20:21:34Z",
+          ]
+        },
+        "ideaId": {
+          "$id": "#/properties/ideaId",
+          "type": "string",
+          "format": "uri",
+          "$comment": "URI of the ideaId",
+          "examples": [
+            "https://localhost:8080/<idea_osid>"
+          ]
+        },
+        "nCoins": {
+          "$id": "#/properties/nonce",
+          "type": "string",
+          "$comment": "Number of coins voted"
+        }
+      }
+    }
+  }
+}
