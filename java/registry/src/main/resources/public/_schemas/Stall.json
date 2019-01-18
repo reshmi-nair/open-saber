@@ -9,7 +9,7 @@
   "required": [
     "stall"
   ],
-  "title":"stall",
+  "title":"Stall",
   "_osConfig": {
     "osComment": [],
     "privateFields": [],
@@ -22,24 +22,24 @@
       "title": "The stall Schema",
       "required": [
         "name",
-        "code",
-        "ideaCode"
+        "id",
+        "ideas"
       ],
       "properties": {
-        "code": {
-          "$id": "#/properties/code",
-          "type": "string",
-          "$comment": "Code"
+        "id": {
+          "$id": "#/properties/id",
+          "type": "integer",
+          "$comment": "Stall identifier"
         },
         "name": {
           "$id": "#/properties/name",
           "type": "string",
           "title": "Stall name"
         },
-        "ideaCode": {
+        "ideas": {
           "$id": "#/properties/ideaCode",
           "type": "array",
-          "$comment": "Idea code"
+          "$ref": "Idea.json#/definitions/Idea"
         }
       }
     }
