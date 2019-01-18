@@ -2,21 +2,21 @@
   "$schema": "http://json-schema.org/draft-07/schema",
   "type": "object",
   "properties": {
-    "visitor": {
-      "$ref": "#/definitions/visitor"
+    "Visitor": {
+      "$ref": "#/definitions/Visitor"
     }
   },
   "required": [
-    "visitor"
+    "Visitor"
   ],
-  "title":"visitor",
+  "title":"Visitor",
   "_osConfig": {
     "osComment": [],
-    "privateFields": ["birthDate","mobileNumber","email"],
+    "privateFields": [],
     "signedFields": []
   },
   "definitions": {
-    "visitor": {
+    "Visitor": {
       "$id": "#/properties/visitor",
       "type": "object",
       "title": "The visitor Schema",
@@ -26,11 +26,10 @@
       ],
       "optional": [
         "signatures",
-        "email",
-        "mobileNumber",
-        "gender",
-        "birthDate",
-        "location"
+        "org",
+        "coinsSpent",
+        "coinsGiven",
+        "votes"
       ],
       "properties": {
         "signatures": {
@@ -41,38 +40,38 @@
           },
           "$comment": "Placeholder for all verifiable claims"
         },
-        "mobileNumber": {
-          "$id": "#/properties/mobileNumber",
-          "type": "integer",
-          "$comment": "Mobile number"
+        "votes": {
+          "$id": "#/properties/votes",
+          "type": "array",
+          "items": {
+            "$ref": "Vote.json#/definitions/Vote"
+          },
+          "$comment": "Placeholder for all votes this visitor put"
         },
         "qrCode": {
           "$id": "#/properties/qrCode",
           "type": "string",
           "$comment": "Code"
         },
-        "email": {
-          "$id": "#/properties/email",
+        "org": {
+          "$id": "#/properties/org",
           "type": "string",
-          "$comment": "Email"
+          "$comment": "Org name"
         },
         "name": {
           "$id": "#/properties/name",
           "type": "string",
           "title": "Full name"
         },
-        "gender": {
-          "$id": "#/properties/gender",
-          "$ref": "Common.json#/definitions/Gender"
+        "coinsGiven": {
+          "$id": "#/properties/coinsGiven",
+          "type": "integer",
+          "$comment": "Coins given to this visitor"
         },
-        "birthDate": {
-          "$id": "#/properties/birthDate",
-          "$ref": "Common.json#/definitions/Date"
-        },
-        "location": {
-          "$id": "#/properties/location",
-          "type": "string",
-          "$comment": "Location"
+        "coinsSpent": {
+          "$id": "#/properties/coinsSpent",
+          "type": "integer",
+          "$comment": "Coins spent by this visitor"
         }
       }
     }
