@@ -7,39 +7,44 @@
     }
   },
   "required": [
-    "idea"
+    "Idea"
   ],
-  "title":"stall",
+  "title":"Idea",
   "_osConfig": {
     "osComment": [],
     "privateFields": [],
     "signedFields": []
   },
   "definitions": {
-    "idea": {
+    "Idea": {
       "$id": "#/properties/idea",
       "type": "object",
       "title": "The stall Schema",
       "required": [
-        "code",
-        "description",
-        "visitorId"
+        "stallId",
+        "id",
+        "name",
+        "description"
       ],
       "properties": {
-        "code": {
-          "$id": "#/properties/code",
+        "stallId": {
+          "$id": "#/properties/stall id",
           "type": "string",
-          "$comment": "Code"
+          "$comment": "Stall identifier URI"
+        },
+        "id": {
+          "$id": "#/properties/id",
+          "type": "integer",
+          "$comment": "Idea identifier"
+        },
+         "name": {
+          "$id": "#/properties/name",
+          "type": "string"
         },
         "description": {
           "$id": "#/properties/description",
           "type": "string",
-          "title": "Description about idea"
-        },
-        "visitorId": {
-          "$id": "#/properties/idea",
-          "type": "array",
-          "$ref": "Idea.json#/definitions/Idea"
+          "title": "Description of the idea"
         }
       }
     }
