@@ -2,7 +2,7 @@
   "$schema": "http://json-schema.org/draft-07/schema",
   "type": "object",
   "properties": {
-    "stall": {
+    "Idea": {
       "$ref": "#/definitions/idea"
     }
   },
@@ -21,17 +21,11 @@
       "type": "object",
       "title": "The stall Schema",
       "required": [
-        "stallId",
         "id",
         "name",
         "description"
       ],
       "properties": {
-        "stallId": {
-          "$id": "#/properties/stall id",
-          "type": "string",
-          "$comment": "Stall identifier URI"
-        },
         "id": {
           "$id": "#/properties/id",
           "type": "integer",
