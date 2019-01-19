@@ -16,27 +16,8 @@
       "type": "object",
       "title": "The Teacher Schema",
       "required": [
-        "signatures",
-        "serialNum",
-        "teacherCode",
-        "nationalIdentifier",
-        "teacherName",
-        "gender",
-        "birthDate",
-        "socialCategory",
-        "highestAcademicQualification",
-        "highestTeacherQualification",
-        "yearOfJoiningService",
-        "teachingRole",
-        "inServiceTeacherTrainingFromBRC",
-        "inServiceTeacherTrainingFromCRC",
-        "inServiceTeacherTrainingFromDIET",
-        "inServiceTeacherTrainingFromOthers",
-        "nonTeachingAssignmentsForAcademicCalendar",
-        "basicProficiencyLevel",
-        "disabilityType",
-        "trainedForChildrenSpecialNeeds",
-        "trainedinUseOfComputer"
+        "id",
+        "name"
       ],
       "properties": {
         "signatures": {
@@ -47,95 +28,45 @@
           },
           "$comment": "Placeholder for all verifiable claims"
         },
-        "serialNum": {
+        "id": {
           "$id": "#/properties/serialNum",
-          "type": "integer",
-          "$comment": "Serial number"
-        },
-        "teacherCode": {
-          "$id": "#/properties/teacherCode",
           "type": "string",
-          "$comment": "Code"
-        },
-        "nationalIdentifier": {
-          "$id": "#/properties/nationalIdentifier",
-          "type": "string",
-          "$comment": "Nationality"
+          "$comment": "Diksha id"
         },
         "teacherName": {
           "$id": "#/properties/teacherName",
           "type": "string",
           "title": "Full name"
         },
-        "gender": {
-          "$id": "#/properties/gender",
-          "$ref": "Common.json#/definitions/TeacherGender"
+        "passAverage": {
+          "$id": "#/properties/passAverage",
+          "type": "integer",
+          "title": "Percentage pass average"
         },
-        "birthDate": {
-          "$id": "#/properties/birthDate",
-          "$ref": "Common.json#/definitions/Date"
+        "nContentsCreated": {
+          "$id": "#/properties/nContentsCreated",
+          "type": "integer",
+          "title": "Count of contents created"
         },
-        "socialCategory": {
-          "$id": "#/properties/socialCategory",
-          "$ref": "Common.json#/definitions/SocialCategory"
+        "nConsumed": {
+          "$id": "#/properties/nConsumed",
+          "type": "integer",
+          "title": "Cumulative sum of contents created consumed by students"
         },
-        "highestAcademicQualification": {
-          "$id": "#/properties/highestAcademicQualification",
-          "$ref": "Common.json#/definitions/AcademicQualification"
+        "district": {
+          "$id": "#/properties/district",
+          "type": "string",
+          "title": "District name"
         },
-        "highestTeacherQualification": {
-          "$id": "#/properties/highestTeacherQualification",
-          "$ref": "Common.json#/definitions/Qualification"
+        "schoolName": {
+          "$id": "#/properties/schoolName",
+          "type": "string",
+          "title": "Name of the school currently working"
         },
-        "yearOfJoiningService": {
-          "$id": "#/properties/yearOfJoiningService",
-          "$ref": "Common.json#/definitions/Year"
-        },
-        "teachingRole": {
-          "$id": "#/properties/teachingRole",
-          "$ref": "TeachingRole.json#/definitions/TeachingRole"
-        },
-        "inServiceTeacherTrainingFromBRC": {
-          "$id": "#/properties/inServiceTeacherTrainingFromBRC",
-          "$ref": "InServiceTeacherTraining.json#/definitions/InServiceTeacherTraining"
-        },
-        "inServiceTeacherTrainingFromCRC": {
-          "$id": "#/properties/inServiceTeacherTrainingFromCRC",
-          "$ref": "InServiceTeacherTraining.json#/definitions/InServiceTeacherTraining"
-        },
-        "inServiceTeacherTrainingFromDIET": {
-          "$id": "#/properties/inServiceTeacherTrainingFromDIET",
-          "$ref": "InServiceTeacherTraining.json#/definitions/InServiceTeacherTraining"
-        },
-        "inServiceTeacherTrainingFromOthers": {
-          "$id": "#/properties/inServiceTeacherTrainingFromOthers",
-          "$ref": "InServiceTeacherTraining.json#/definitions/InServiceTeacherTraining"
-        },
-        "nonTeachingAssignmentsForAcademicCalendar": {
-          "$id": "#/properties/nonTeachingAssignmentsForAcademicCalendar",
-          "$ref": "NonTeachingAssignments.json#/definitions/NonTeachingAssignments"
-        },
-        "basicProficiencyLevel": {
-          "$id": "#/properties/basicProficiencyLevel",
+        "subjectsTaught": {
+          "$id": "#/properties/subjectsTaught",
           "type": "array",
-          "items": {
-            "$ref": "BasicProficiencyLevel.json#/definitions/BasicProficiencyLevel"
-          },
-          "minItems": 3
-        },
-        "disabilityType": {
-          "$id": "#/properties/disabilityType",
-          "$ref": "Common.json#/definitions/DisabilityType"
-        },
-        "trainedForChildrenSpecialNeeds": {
-          "$id": "#/properties/trainedForChildrenSpecialNeeds",
-          "$ref": "Common.json#/definitions/YesNoCode"
-        },
-        "trainedinUseOfComputer": {
-          "$id": "#/properties/trainedinUseOfComputer",
-          "$ref": "Common.json#/definitions/YesNoCode"
-        },
-        "___encryptedFields": {
+          "title": "Subjects taught"
         }
       }
     }
@@ -144,9 +75,9 @@
          "osComment": ["This section contains the OpenSABER specific configuration information", 
                       "privateFields: Optional; list of field names to be encrypted and stored in database", 
                       "signedFields: Optional; list of field names that must be pre-signed"],                     
-         "privateFields": ["nationalIdentifier", "teacherCode", "birthDate"],
-         "signedFields": ["serialNum"],
-         "indexFields": ["nationalIdentifier", "serialNum"],
-         "uniqueIndexFields": ["birthDate"]
+         "privateFields": [],
+         "signedFields": [],
+         "indexFields": [],
+         "uniqueIndexFields": []
   }
 }
