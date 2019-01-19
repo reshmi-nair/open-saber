@@ -185,9 +185,10 @@ public class RegistryServiceImpl implements RegistryService {
                 shard.getDatabaseProvider().commitTransaction(graph, tx);
                 dbProvider.commitTransaction(graph, tx);
 
-                String vertexLabel = rootNode.fieldNames().next();
-                // creates/updates indices for the vertex or table gets persists)
-                ensureIndexExists(dbProvider, graph, vertexLabel);
+                // Commenting for DEVCON
+//                String vertexLabel = rootNode.fieldNames().next();
+//                // creates/updates indices for the vertex or table gets persists)
+//                ensureIndexExists(dbProvider, graph, vertexLabel);
             }
         }
 

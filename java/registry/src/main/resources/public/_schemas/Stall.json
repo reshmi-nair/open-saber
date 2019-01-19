@@ -2,12 +2,12 @@
   "$schema": "http://json-schema.org/draft-07/schema",
   "type": "object",
   "properties": {
-    "stall": {
-      "$ref": "#/definitions/stall"
+    "Stall": {
+      "$ref": "#/definitions/Stall"
     }
   },
   "required": [
-    "stall"
+    "Stall"
   ],
   "title":"Stall",
   "_osConfig": {
@@ -16,7 +16,7 @@
     "signedFields": []
   },
   "definitions": {
-    "stall": {
+    "Stall": {
       "$id": "#/properties/stall",
       "type": "object",
       "title": "The stall Schema",
@@ -29,17 +29,35 @@
         "id": {
           "$id": "#/properties/id",
           "type": "integer",
-          "$comment": "Stall identifier"
+          "$comment": "Stall identifier - please use these ids only against your stall",
+          "examples": [
+            "1 - Creation",
+            "2 - ClassRoom",
+            "3 - StaffRoom",
+            "4 - AdminOffice",
+            "5 - NOC",
+            "6 - Bazaar"
+          ]
         },
         "name": {
           "$id": "#/properties/name",
           "type": "string",
+          "enum": [
+            "Creation",
+            "ClassRoom",
+            "StaffRoom",
+            "AdminOffice",
+            "NOC",
+            "Bazaar"
+          ],
           "title": "Stall name"
         },
         "ideas": {
           "$id": "#/properties/ideaCode",
           "type": "array",
-          "$ref": "Idea.json#/definitions/Idea"
+          "items": {
+            "$ref": "Idea.json#/definitions/Idea"
+          }
         }
       }
     }
