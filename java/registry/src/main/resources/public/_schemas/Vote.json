@@ -29,7 +29,7 @@
           "type": "string",
           "format": "date-time",
           "examples": [
-            "2017-09-23T20:21:34Z",
+            "2017-09-23T20:21:34Z"
           ]
         },
         "ideaId": {
