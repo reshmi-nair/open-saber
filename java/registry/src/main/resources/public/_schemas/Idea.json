@@ -3,7 +3,7 @@
   "type": "object",
   "properties": {
     "Idea": {
-      "$ref": "#/definitions/idea"
+      "$ref": "#/definitions/Idea"
     }
   },
   "required": [
