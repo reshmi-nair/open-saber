@@ -2,6 +2,7 @@ package io.opensaber.registry.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import io.opensaber.pojos.*;
@@ -280,30 +281,37 @@ public class RegistryController {
             response.setResult(resultContent.getData());
 
         } catch (Exception e) {
-            logger.error("Read Api Exception occurred ", e);
+            logger.error("Read-devcon Api Exception occurred ", e);
             responseParams.setErr(e.getMessage());
             responseParams.setStatus(Response.Status.UNSUCCESSFUL);
         }
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    /*@RequestMapping(value = "/load", method = RequestMethod.POST)
-    public ResponseEntity<Response> loadConfig(@RequestHeader HttpHeaders header) throws IOException {
+    @RequestMapping(value = "/load", method = RequestMethod.POST)
+    public ResponseEntity<Response> loadConfig(@RequestHeader HttpHeaders header) {
         ResponseParams responseParams = new ResponseParams();
-        Response response = new Response(Response.API_ID.READ, "OK", responseParams);
+        Response response = new Response(Response.API_ID.LOAD, "OK", responseParams);
         Map<String, Object> reqMap =  apiMessage.getRequest().getRequestMap();
-        InputStream is = this.getClass().getClassLoader().getResourceAsStream("entity.json");
-         objectMapper.writeValue(is);
-        JsonNode osid = newNode.get(code);
         try{
-
+            String fileName = this.getClass().getClassLoader().getResource("entity.json").getPath();
+            if(reqMap.containsKey("append")){
+                InputStream is = this.getClass().getClassLoader().getResourceAsStream("entity.json");
+                ObjectNode newNode = (ObjectNode) objectMapper.readTree(is);
+                ObjectNode node = objectMapper.convertValue(reqMap.get("append"), ObjectNode.class);
+                newNode.setAll(node);
+                objectMapper.writeValue(new File(fileName),newNode);
+            } else {
+                objectMapper.writeValue(new File(fileName),reqMap);
+            }
         } catch (Exception e) {
-            logger.error("Read Api Exception occurred ", e);
+            logger.error("load Api Exception occurred ", e);
             responseParams.setErr(e.getMessage());
             responseParams.setStatus(Response.Status.UNSUCCESSFUL);
         }
+        logger.debug("Loaded key values");
         return new ResponseEntity<>(response, HttpStatus.OK);
-    }*/
+    }
 
     @ResponseBody
     @RequestMapping(value = "/update", method = RequestMethod.POST)

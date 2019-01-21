@@ -76,7 +76,7 @@ public class Response {
 								"open-saber.registry.search"), SIGN("open-saber.utils.sign"), VERIFY(
 										"open-saber.utils.verify"), KEYS("open-saber.utils.keys"), ENCRYPT(
 												"open-saber.utils.encrypt"), DECRYPT(
-														"open-saber.utils.decrypt"), NONE("");
+														"open-saber.utils.decrypt"),LOAD("open-saber.registry.load"), NONE("");
 		private String id;
 
 		private API_ID(String id) {
