@@ -39,17 +39,12 @@
           "$ref": "Common.json#/definitions/GradeDevCon",
           "title": "Class"
         },
-        "district": {
-          "$id": "#/properties/district",
-          "type": "string",
-          "title": "District name"
-        },
         "schoolName": {
           "$id": "#/properties/schoolName",
           "type": "string",
           "$ref": "Common.json#/definitions/SchoolDevCon"
         },
-        "teachers": {
+        "teacher": {
           "type": "array",
           "items": {
             "type": "string",
