@@ -146,7 +146,7 @@
     },
     "IdDevCon": {
       "type": "string",
-      "$comment": "Some unique string identifier for devcon"
+      "$comment": "Some unique string identifier for devcon",
       "examples": [
         "Tn for teachers",
         "Sn for students",
