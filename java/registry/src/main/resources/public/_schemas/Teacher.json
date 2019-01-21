@@ -9,34 +9,20 @@
   "required": [
     "Teacher"
   ],
-  "title":"Teacher",
+  "title": "Teacher",
   "definitions": {
     "Teacher": {
       "$id": "#/properties/Teacher",
       "type": "object",
       "title": "The Teacher Schema",
       "required": [
-        "signatures",
-        "serialNum",
-        "teacherCode",
-        "nationalIdentifier",
-        "teacherName",
-        "gender",
-        "birthDate",
-        "socialCategory",
-        "highestAcademicQualification",
-        "highestTeacherQualification",
-        "yearOfJoiningService",
-        "teachingRole",
-        "inServiceTeacherTrainingFromBRC",
-        "inServiceTeacherTrainingFromCRC",
-        "inServiceTeacherTrainingFromDIET",
-        "inServiceTeacherTrainingFromOthers",
-        "nonTeachingAssignmentsForAcademicCalendar",
-        "basicProficiencyLevel",
-        "disabilityType",
-        "trainedForChildrenSpecialNeeds",
-        "trainedinUseOfComputer"
+        "name",
+        "board",
+        "medium",
+        "grade",
+        "subjects",
+        "district",
+        "schoolName"
       ],
       "properties": {
         "signatures": {
@@ -47,106 +33,100 @@
           },
           "$comment": "Placeholder for all verifiable claims"
         },
-        "serialNum": {
-          "$id": "#/properties/serialNum",
-          "type": "integer",
-          "$comment": "Serial number"
-        },
-        "teacherCode": {
-          "$id": "#/properties/teacherCode",
-          "type": "string",
-          "$comment": "Code"
-        },
-        "nationalIdentifier": {
-          "$id": "#/properties/nationalIdentifier",
-          "type": "string",
-          "$comment": "Nationality"
-        },
-        "teacherName": {
-          "$id": "#/properties/teacherName",
+        "name": {
+          "$id": "#/properties/name",
           "type": "string",
           "title": "Full name"
         },
-        "gender": {
-          "$id": "#/properties/gender",
-          "$ref": "Common.json#/definitions/TeacherGender"
+        "board": {
+          "$id": "#/properties/board",
+          "type": "string",
+          "enum": [
+            "CBSE"
+          ],
+          "title": "Board name"
         },
-        "birthDate": {
-          "$id": "#/properties/birthDate",
-          "$ref": "Common.json#/definitions/Date"
+        "medium": {
+          "$id": "#/properties/medium",
+          "type": "string",
+          "enum": [
+            "English"
+          ],
+          "title": "Medium"
         },
-        "socialCategory": {
-          "$id": "#/properties/socialCategory",
-          "$ref": "Common.json#/definitions/SocialCategory"
-        },
-        "highestAcademicQualification": {
-          "$id": "#/properties/highestAcademicQualification",
-          "$ref": "Common.json#/definitions/AcademicQualification"
-        },
-        "highestTeacherQualification": {
-          "$id": "#/properties/highestTeacherQualification",
-          "$ref": "Common.json#/definitions/Qualification"
-        },
-        "yearOfJoiningService": {
-          "$id": "#/properties/yearOfJoiningService",
-          "$ref": "Common.json#/definitions/Year"
-        },
-        "teachingRole": {
-          "$id": "#/properties/teachingRole",
-          "$ref": "TeachingRole.json#/definitions/TeachingRole"
-        },
-        "inServiceTeacherTrainingFromBRC": {
-          "$id": "#/properties/inServiceTeacherTrainingFromBRC",
-          "$ref": "InServiceTeacherTraining.json#/definitions/InServiceTeacherTraining"
-        },
-        "inServiceTeacherTrainingFromCRC": {
-          "$id": "#/properties/inServiceTeacherTrainingFromCRC",
-          "$ref": "InServiceTeacherTraining.json#/definitions/InServiceTeacherTraining"
-        },
-        "inServiceTeacherTrainingFromDIET": {
-          "$id": "#/properties/inServiceTeacherTrainingFromDIET",
-          "$ref": "InServiceTeacherTraining.json#/definitions/InServiceTeacherTraining"
-        },
-        "inServiceTeacherTrainingFromOthers": {
-          "$id": "#/properties/inServiceTeacherTrainingFromOthers",
-          "$ref": "InServiceTeacherTraining.json#/definitions/InServiceTeacherTraining"
-        },
-        "nonTeachingAssignmentsForAcademicCalendar": {
-          "$id": "#/properties/nonTeachingAssignmentsForAcademicCalendar",
-          "$ref": "NonTeachingAssignments.json#/definitions/NonTeachingAssignments"
-        },
-        "basicProficiencyLevel": {
-          "$id": "#/properties/basicProficiencyLevel",
+        "subjects": {
+          "$id": "#/properties/subjects",
           "type": "array",
           "items": {
-            "$ref": "BasicProficiencyLevel.json#/definitions/BasicProficiencyLevel"
+            "$ref": "Common.json#/definitions/SubjectsDevCon"
           },
-          "minItems": 3
+          "title": "Subjects taught"
         },
-        "disabilityType": {
-          "$id": "#/properties/disabilityType",
-          "$ref": "Common.json#/definitions/DisabilityType"
+        "grade": {
+          "$id": "#/properties/grade",
+          "type": "array",
+          "items": {
+            "$ref": "Common.json#/definitions/GradeDevCon"
+          },
+          "title": "Class"
         },
-        "trainedForChildrenSpecialNeeds": {
-          "$id": "#/properties/trainedForChildrenSpecialNeeds",
-          "$ref": "Common.json#/definitions/YesNoCode"
+        "district": {
+          "$id": "#/properties/district",
+          "type": "string",
+          "title": "District name"
         },
-        "trainedinUseOfComputer": {
-          "$id": "#/properties/trainedinUseOfComputer",
-          "$ref": "Common.json#/definitions/YesNoCode"
+        "schoolName": {
+          "$id": "#/properties/schoolName",
+          "type": "string",
+          "$ref": "Common.json#/definitions/SchoolDevCon",
+          "title": "Name of the school currently working for"
         },
-        "___encryptedFields": {
+        "state": {
+          "$ref": "Common.json#/definitions/StateDevCon"
+        },
+        "phone": {
+          "$ref": "Common.json#/definitions/PhoneDevCon"
+        },
+        "email": {
+          "$ref": "Common.json#/definitions/EmailDevCon"
+        },
+        "statistics": {
+          "type": "object",
+          "properties": {
+            "passAverage": {
+              "$id": "#/properties/passAverage",
+              "type": "number",
+              "title": "Percentage pass average"
+            },
+            "nContentsCreated": {
+              "$id": "#/properties/nContentsCreated",
+              "type": "integer",
+              "title": "Count of contents created"
+            },
+            "nConsumed": {
+              "$id": "#/properties/nConsumed",
+              "type": "integer",
+              "title": "Cumulative sum of contents created consumed by students"
+            },
+            "attendancePercent" : {
+              "$id": "#/properties/attendancePercent",
+              "type": "number",
+              "title": "Percent of attendance"
+            }
+          }
         }
       }
     }
   },
   "_osConfig": {
-         "osComment": ["This section contains the OpenSABER specific configuration information", 
-                      "privateFields: Optional; list of field names to be encrypted and stored in database", 
-                      "signedFields: Optional; list of field names that must be pre-signed"],                     
-         "privateFields": ["nationalIdentifier", "teacherCode", "birthDate"],
-         "signedFields": ["serialNum"],
-         "indexFields": ["nationalIdentifier", "serialNum"],
-         "uniqueIndexFields": ["birthDate"]
+    "osComment": [
+      "This section contains the OpenSABER specific configuration information",
+      "privateFields: Optional; list of field names to be encrypted and stored in database",
+      "signedFields: Optional; list of field names that must be pre-signed"
+    ],
+    "privateFields": [],
+    "signedFields": [],
+    "indexFields": [],
+    "uniqueIndexFields": []
   }
 }

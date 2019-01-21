@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema",
-  "title":"common",
+  "title": "common",
   "definitions": {
     "@type": {
       "type": "string"
@@ -98,6 +98,51 @@
         "ClassTypeCode-UPPERPRIMARYANDSECONDARY",
         "ClassTypeCode-SECONDARYANDHIGHERSECONDARY"
       ]
+    },
+    "SubjectsDevCon": {
+      "type": "string",
+      "enum": [
+        "Geography",
+        "EVS",
+        "Physics"
+      ],
+      "$comment": "Subjects"
+    },
+    "GradeDevCon": {
+      "type": "integer",
+      "enum": [
+        3, 4, 5, 8
+      ],
+      "$comment": "Class"
+    },
+    "SchoolDevCon": {
+      "type": "string",
+      "enum": [
+        "Ayan international school",
+        "QSBB higher secondary school"
+      ],
+      "$comment": "School"
+    },
+    "StateDevCon": {
+      "type": "string",
+      "enum": [
+        "Karnataka",
+        "Tamil Nadu",
+        "Kerala",
+        "Andhra Pradesh",
+        "Maharashtra",
+        "Goa",
+        "Pondicherry"
+      ],
+      "$comment": "State"
+    },
+    "EmailDevCon": {
+      "type": "string",
+      "$comment": "Email"
+    },
+    "PhoneDevCon": {
+      "type": "number",
+      "$comment": "Phone numnber"
     },
     "Subjects": {
       "type": "string",

@@ -1,0 +1,56 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "type": "object",
+  "properties": {
+    "Parent": {
+      "$ref": "#/definitions/Parent"
+    }
+  },
+  "required": [
+    "Parent"
+  ],
+  "title": "Parent",
+  "definitions": {
+    "Parent": {
+      "$id": "#/properties/Parent",
+      "type": "object",
+      "title": "The Parent Schema",
+      "required": [
+        "name"
+      ],
+      "properties": {
+        "signatures": {
+          "$id": "#/properties/signatures",
+          "type": "array",
+          "items": {
+            "$ref": "Signature.json#/definitions/Signature"
+          },
+          "$comment": "Placeholder for all verifiable claims"
+        },
+        "name": {
+          "$id": "#/properties/name",
+          "type": "string",
+          "title": "Full name"
+        },
+        "children": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "URI"
+          }
+        }
+      }
+    }
+  },
+  "_osConfig": {
+    "osComment": [
+      "This section contains the OpenSABER specific configuration information",
+      "privateFields: Optional; list of field names to be encrypted and stored in database",
+      "signedFields: Optional; list of field names that must be pre-signed"
+    ],
+    "privateFields": [],
+    "signedFields": [],
+    "indexFields": [],
+    "uniqueIndexFields": []
+  }
+}
