@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import io.circe.Json;
 import io.opensaber.pojos.*;
 import io.opensaber.registry.middleware.util.Constants;
 import io.opensaber.registry.middleware.util.Constants.Direction;
@@ -67,6 +68,17 @@ public class RegistryController {
 
     @Autowired
     private ShardManager shardManager;
+
+    @Value("${visitor.idStart}")
+    private int visitorIdNext;
+
+    public int getVisitorIdNext() {
+        return visitorIdNext++;
+    }
+
+    private static final String VISITOR_STR = "Visitor";
+    private static final String VISITOR_CODE_STR = "VIS";
+    private static final String CODE_STR = "code";
 
     /**
      * Note: Only one mime type is supported at a time. Pick up the first mime
@@ -175,15 +187,21 @@ public class RegistryController {
         ResponseParams responseParams = new ResponseParams();
         Response response = new Response(Response.API_ID.CREATE, "OK", responseParams);
         Map<String, Object> result = new HashMap<>();
-        String jsonString = apiMessage.getRequest().getRequestMapAsString();
         String entityType = apiMessage.getRequest().getEntityType();
+        String codeGenerated = VISITOR_CODE_STR + getVisitorIdNext();
+        String jsonString;
+
+        if (entityType.equals(VISITOR_STR)) {
+            apiMessage.getRequest().addField(CODE_STR, codeGenerated);
+        }
+        jsonString = apiMessage.getRequest().getRequestMapAsString(entityType.equals(VISITOR_STR));
 
         try {
 
-            Map requestMap = ((HashMap<String, Object>) apiMessage.getRequest().getRequestMap().get(entityType));
-            logger.info("Add api: entity type " + requestMap + " and shard propery: " + shardManager.getShardProperty());
-            logger.info("request: " + requestMap.get(shardManager.getShardProperty()));
-            Object attribute = requestMap.getOrDefault(shardManager.getShardProperty(), null);
+            JsonNode entityData = (JsonNode) apiMessage.getRequest().getRequestMap().get(entityType);
+            //logger.info("Add api: entity type " +  + " and shard propery: " + shardManager.getShardProperty());
+            logger.info("request: " + entityData.get(shardManager.getShardProperty()));
+            Object attribute = entityData.get(shardManager.getShardProperty());
             logger.info("attribute " + attribute);
             Shard shard = shardManager.getShard(attribute);
 
@@ -193,6 +211,9 @@ public class RegistryController {
             Map resultMap = new HashMap();
             String label = recordId.toString();
             resultMap.put(dbConnectionInfoMgr.getUuidPropertyName(), label);
+            if (entityType.equals(VISITOR_STR)) {
+                resultMap.put(CODE_STR, codeGenerated);
+            }
 
             result.put(apiMessage.getRequest().getEntityType(), resultMap);
             response.setResult(result);

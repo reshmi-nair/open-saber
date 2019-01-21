@@ -19,6 +19,9 @@ perf:
 persistence:
   enabled: ${persistence_enabled:true}
 
+visitor:
+  idStart: 999
+
 registry:
   context:
     base: ${registry_context_base:http://localhost:8080/}

@@ -21,7 +21,6 @@
       "type": "object",
       "title": "The visitor Schema",
       "required": [
-        "code",
         "name"
       ],
       "optional": [

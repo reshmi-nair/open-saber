@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonSetter;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import java.io.IOException;
 import java.util.Map;
@@ -80,8 +81,8 @@ public class Request {
 		return requestMap.keySet().iterator().next().toString();
 	}
 
-	public String getRequestMapAsString() {
-		if (requestMapString == null) {
+	public String getRequestMapAsString(boolean force) 	{
+		if (requestMapString == null || force) {
 			try {
 				requestMapString = new ObjectMapper().writeValueAsString(getRequestMap());
 			} catch (JsonProcessingException jpe) {
@@ -89,6 +90,10 @@ public class Request {
 			}
 		}
 		return requestMapString;
+	}
+
+	public String getRequestMapAsString() {
+		return getRequestMapAsString(false);
 	}
 
 	public void setRequestMap(Map<String, Object> requestMap) {
@@ -100,6 +105,13 @@ public class Request {
 			requestMapNode = new ObjectMapper().valueToTree(requestMap);
 		}
 		return requestMapNode;
+	}
+
+	public void addField(String fieldName, String fieldValue) {
+		ObjectNode existingData = (ObjectNode) getRequestMapNode().get(getEntityType());
+		existingData.put(fieldName, fieldValue);
+
+		getRequestMap().put(getEntityType(), existingData);
 	}
 
 }
