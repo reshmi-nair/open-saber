@@ -8,6 +8,7 @@ dump.json
 /.idea
 *.iml
 .idea_modules
+node_modules
 
 .metadata
 bin/
