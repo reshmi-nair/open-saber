@@ -196,8 +196,7 @@ public class RegistryController {
         jsonString = apiMessage.getRequest().getRequestMapAsString(entityType.equals(VISITOR_STR));
 
         try {
-
-            JsonNode entityData = (JsonNode) apiMessage.getRequest().getRequestMap().get(entityType);
+            JsonNode entityData = (JsonNode) apiMessage.getRequest().getRequestMapNode().get(entityType);
             //logger.info("Add api: entity type " +  + " and shard propery: " + shardManager.getShardProperty());
             logger.info("request: " + entityData.get(shardManager.getShardProperty()));
             Object attribute = entityData.get(shardManager.getShardProperty());
