@@ -21,10 +21,15 @@
       "type": "object",
       "title": "The stall Schema",
       "required": [
+        "code",
         "name",
         "ideas"
       ],
       "properties": {
+        "code": {
+          "$id": "#/properties/stallCode",
+          "$ref": "Common.json#/definitions/IdDevCon"
+        },
         "name": {
           "$id": "#/properties/name",
           "type": "string",

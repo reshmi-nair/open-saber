@@ -21,13 +21,13 @@
       "type": "object",
       "title": "The stall Schema",
       "required": [
-        "id",
+        "code",
         "name",
         "description"
       ],
       "properties": {
-        "id": {
-          "$id": "#/properties/id",
+        "code": {
+          "$id": "#/properties/code",
           "type": "integer",
           "$comment": "Idea identifier"
         },

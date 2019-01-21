@@ -16,6 +16,7 @@
       "type": "object",
       "title": "The Teacher Schema",
       "required": [
+        "code",
         "name",
         "board",
         "medium",
@@ -32,6 +33,10 @@
             "$ref": "Signature.json#/definitions/Signature"
           },
           "$comment": "Placeholder for all verifiable claims"
+        },
+        "code": {
+          "$id": "#/properties/teacherCode",
+          "$ref": "Common.json#/definitions/IdDevCon"
         },
         "name": {
           "$id": "#/properties/name",

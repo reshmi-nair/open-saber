@@ -21,6 +21,7 @@
       "type": "object",
       "title": "The visitor Schema",
       "required": [
+        "code",
         "name"
       ],
       "optional": [
@@ -51,6 +52,10 @@
           "$id": "#/properties/org",
           "type": "string",
           "$comment": "Org name"
+        },
+        "code": {
+          "$id": "#/properties/visitorCode",
+          "$ref": "Common.json#/definitions/IdDevCon"
         },
         "name": {
           "$id": "#/properties/name",

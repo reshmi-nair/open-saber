@@ -16,6 +16,7 @@
       "type": "object",
       "title": "The Student Schema",
       "required": [
+        "code",
         "name",
         "grade",
         "schoolName"
@@ -28,6 +29,10 @@
             "$ref": "Signature.json#/definitions/Signature"
           },
           "$comment": "Placeholder for all verifiable claims"
+        },
+        "code": {
+          "$id": "#/properties/studentCode",
+          "$ref": "Common.json#/definitions/IdDevCon"
         },
         "name": {
           "$id": "#/properties/name",
