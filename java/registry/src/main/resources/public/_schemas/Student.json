@@ -1,0 +1,80 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "type": "object",
+  "properties": {
+    "Student": {
+      "$ref": "#/definitions/Student"
+    }
+  },
+  "required": [
+    "Student"
+  ],
+  "title": "Student",
+  "definitions": {
+    "Student": {
+      "$id": "#/properties/Student",
+      "type": "object",
+      "title": "The Student Schema",
+      "required": [
+        "name",
+        "grade",
+        "schoolName"
+      ],
+      "properties": {
+        "signatures": {
+          "$id": "#/properties/signatures",
+          "type": "array",
+          "items": {
+            "$ref": "Signature.json#/definitions/Signature"
+          },
+          "$comment": "Placeholder for all verifiable claims"
+        },
+        "name": {
+          "$id": "#/properties/name",
+          "type": "string",
+          "title": "Full name"
+        },
+        "grade": {
+          "$id": "#/properties/grade",
+          "$ref": "Common.json#/definitions/GradeDevCon",
+          "title": "Class"
+        },
+        "district": {
+          "$id": "#/properties/district",
+          "type": "string",
+          "title": "District name"
+        },
+        "schoolName": {
+          "$id": "#/properties/schoolName",
+          "type": "string",
+          "$ref": "Common.json#/definitions/SchoolDevCon"
+        },
+        "teachers": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "URI"
+          }
+        },
+        "parent": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "URI"
+          }
+        }
+      }
+    }
+  },
+  "_osConfig": {
+    "osComment": [
+      "This section contains the OpenSABER specific configuration information",
+      "privateFields: Optional; list of field names to be encrypted and stored in database",
+      "signedFields: Optional; list of field names that must be pre-signed"
+    ],
+    "privateFields": [],
+    "signedFields": [],
+    "indexFields": [],
+    "uniqueIndexFields": []
+  }
+}

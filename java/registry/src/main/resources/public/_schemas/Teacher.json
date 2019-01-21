@@ -9,15 +9,20 @@
   "required": [
     "Teacher"
   ],
-  "title":"Teacher",
+  "title": "Teacher",
   "definitions": {
     "Teacher": {
       "$id": "#/properties/Teacher",
       "type": "object",
       "title": "The Teacher Schema",
       "required": [
-        "id",
-        "name"
+        "name",
+        "board",
+        "medium",
+        "grade",
+        "subjects",
+        "district",
+        "schoolName"
       ],
       "properties": {
         "signatures": {
@@ -28,30 +33,42 @@
           },
           "$comment": "Placeholder for all verifiable claims"
         },
-        "id": {
-          "$id": "#/properties/serialNum",
-          "type": "string",
-          "$comment": "Diksha id"
-        },
         "name": {
-          "$id": "#/properties/teacherName",
+          "$id": "#/properties/name",
           "type": "string",
           "title": "Full name"
         },
-        "passAverage": {
-          "$id": "#/properties/passAverage",
-          "type": "number",
-          "title": "Percentage pass average"
+        "board": {
+          "$id": "#/properties/board",
+          "type": "string",
+          "enum": [
+            "CBSE"
+          ],
+          "title": "Board name"
         },
-        "nContentsCreated": {
-          "$id": "#/properties/nContentsCreated",
-          "type": "integer",
-          "title": "Count of contents created"
+        "medium": {
+          "$id": "#/properties/medium",
+          "type": "string",
+          "enum": [
+            "English"
+          ],
+          "title": "Medium"
         },
-        "nConsumed": {
-          "$id": "#/properties/nConsumed",
-          "type": "integer",
-          "title": "Cumulative sum of contents created consumed by students"
+        "subjects": {
+          "$id": "#/properties/subjects",
+          "type": "array",
+          "items": {
+            "$ref": "Common.json#/definitions/SubjectsDevCon"
+          },
+          "title": "Subjects taught"
+        },
+        "grade": {
+          "$id": "#/properties/grade",
+          "type": "array",
+          "items": {
+            "$ref": "Common.json#/definitions/GradeDevCon"
+          },
+          "title": "Class"
         },
         "district": {
           "$id": "#/properties/district",
@@ -61,26 +78,55 @@
         "schoolName": {
           "$id": "#/properties/schoolName",
           "type": "string",
-          "title": "Name of the school currently working"
+          "$ref": "Common.json#/definitions/SchoolDevCon",
+          "title": "Name of the school currently working for"
         },
-        "subjectsTaught": {
-          "$id": "#/properties/subjectsTaught",
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "title": "Subjects taught"
+        "state": {
+          "$ref": "Common.json#/definitions/StateDevCon"
+        },
+        "phone": {
+          "$ref": "Common.json#/definitions/PhoneDevCon"
+        },
+        "email": {
+          "$ref": "Common.json#/definitions/EmailDevCon"
+        },
+        "statistics": {
+          "type": "object",
+          "properties": {
+            "passAverage": {
+              "$id": "#/properties/passAverage",
+              "type": "number",
+              "title": "Percentage pass average"
+            },
+            "nContentsCreated": {
+              "$id": "#/properties/nContentsCreated",
+              "type": "integer",
+              "title": "Count of contents created"
+            },
+            "nConsumed": {
+              "$id": "#/properties/nConsumed",
+              "type": "integer",
+              "title": "Cumulative sum of contents created consumed by students"
+            },
+            "attendancePercent" : {
+              "$id": "#/properties/attendancePercent",
+              "type": "number",
+              "title": "Percent of attendance"
+            }
+          }
         }
       }
     }
   },
   "_osConfig": {
-         "osComment": ["This section contains the OpenSABER specific configuration information", 
-                      "privateFields: Optional; list of field names to be encrypted and stored in database", 
-                      "signedFields: Optional; list of field names that must be pre-signed"],                     
-         "privateFields": [],
-         "signedFields": [],
-         "indexFields": [],
-         "uniqueIndexFields": []
+    "osComment": [
+      "This section contains the OpenSABER specific configuration information",
+      "privateFields: Optional; list of field names to be encrypted and stored in database",
+      "signedFields: Optional; list of field names that must be pre-signed"
+    ],
+    "privateFields": [],
+    "signedFields": [],
+    "indexFields": [],
+    "uniqueIndexFields": []
   }
 }
