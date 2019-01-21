@@ -44,7 +44,18 @@
         "nCoins": {
           "$id": "#/properties/nonce",
           "type": "string",
-          "$comment": "Number of coins voted"
+          "$comment": "Number of coins voted against this idea"
+        },
+        "rating" : {
+          "$id": "#/properties/starRating",
+          "type": "integer",
+          "enum": [1, 2, 3, 4, 5],
+          "$comment": "Star rating, only one is allowed"
+        },
+        "comment": {
+          "$id": "#/properties/comment",
+          "type": "string",
+          "$comment": "Free form comments"
         }
       }
     }
