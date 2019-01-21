@@ -1,6 +1,7 @@
 package io.opensaber.registry.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import io.opensaber.pojos.*;
@@ -17,6 +18,9 @@ import io.opensaber.registry.transform.*;
 import io.opensaber.registry.util.ReadConfigurator;
 import io.opensaber.registry.util.RecordIdentifier;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.Map;
@@ -57,6 +61,8 @@ public class RegistryController {
     public String uuidPropertyName;
     @Autowired
     private OpenSaberInstrumentation watch;
+    @Autowired
+    private ObjectMapper objectMapper;
 
     @Autowired
     private ShardManager shardManager;
@@ -239,6 +245,65 @@ public class RegistryController {
 
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
+
+    @RequestMapping(value = "/read-dev", method = RequestMethod.POST)
+    public ResponseEntity<Response> devconRead(@RequestHeader HttpHeaders header) throws IOException {
+        ResponseParams responseParams = new ResponseParams();
+        Response response = new Response(Response.API_ID.READ, "OK", responseParams);
+        String code = (String) apiMessage.getRequest().getRequestMap().get("code");
+        InputStream is = this.getClass().getClassLoader().getResourceAsStream("entity.json");
+        JsonNode newNode = objectMapper.readTree(is);
+        JsonNode osid = newNode.get(code);
+
+        RecordIdentifier recordId = RecordIdentifier.parse(osid.textValue());
+        String shardId = dbConnectionInfoMgr.getShardId(recordId.getShardLabel());
+        shardManager.activateShard(shardId);
+        logger.info("Read Api: shard id: " + recordId.getShardLabel() + " for label: " + osid.asText());
+
+        String acceptType = header.getAccept().iterator().next().toString();
+
+        ReadConfigurator configurator = new ReadConfigurator();
+        boolean includeSignatures = (boolean) apiMessage.getRequest().getRequestMap().getOrDefault("includeSignatures",
+                false);
+        configurator.setIncludeSignatures(includeSignatures);
+        configurator.setIncludeTypeAttributes(acceptType.equals(Constants.LD_JSON_MEDIA_TYPE));
+
+        try {
+            JsonNode resultNode = registryService.getEntity(recordId.getUuid(), configurator);
+            // Transformation based on the mediaType
+            Data<Object> data = new Data<>(resultNode);
+            Configuration config = configurationHelper.getConfiguration(acceptType, Direction.OUT);
+            logger.info("config : " + config);
+            ITransformer<Object> responseTransformer = transformer.getInstance(config);
+            Data<Object> resultContent = responseTransformer.transform(data);
+            logger.info("JSON LD: " + resultContent.getData());
+            response.setResult(resultContent.getData());
+
+        } catch (Exception e) {
+            logger.error("Read Api Exception occurred ", e);
+            responseParams.setErr(e.getMessage());
+            responseParams.setStatus(Response.Status.UNSUCCESSFUL);
+        }
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    /*@RequestMapping(value = "/load", method = RequestMethod.POST)
+    public ResponseEntity<Response> loadConfig(@RequestHeader HttpHeaders header) throws IOException {
+        ResponseParams responseParams = new ResponseParams();
+        Response response = new Response(Response.API_ID.READ, "OK", responseParams);
+        Map<String, Object> reqMap =  apiMessage.getRequest().getRequestMap();
+        InputStream is = this.getClass().getClassLoader().getResourceAsStream("entity.json");
+         objectMapper.writeValue(is);
+        JsonNode osid = newNode.get(code);
+        try{
+
+        } catch (Exception e) {
+            logger.error("Read Api Exception occurred ", e);
+            responseParams.setErr(e.getMessage());
+            responseParams.setStatus(Response.Status.UNSUCCESSFUL);
+        }
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }*/
 
     @ResponseBody
     @RequestMapping(value = "/update", method = RequestMethod.POST)

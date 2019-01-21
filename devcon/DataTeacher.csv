@@ -1,0 +1,16 @@
+School,id,Teacher Name,Grade,Subject
+"S2 (devcon)
+QSBB higher secondary school",TCH1,Nirmala,3,EVS
+,TCH2,Padma,4,Geography
+,TCH3,Jayabalan,4,EVS
+,TCH4,Rani,5,Geography
+,TCH5,John,8,Physics
+,,,,
+,,,,
+,,,,
+"S1 (static)
+Ayan international school",TCH6,Anita,3,EVS
+,TCH7,Lorita,4,Geography
+,TCH8,Britto,4,EVS
+,TCH9,Jayshree,5,Geography
+,TCH10,Pandian,8,Physics
