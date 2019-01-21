@@ -1,0 +1,15 @@
+{
+  "name": "perftestutils",
+  "version": "1.0.0",
+  "description": "Open-Saber perf test",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "async": "^2.6.1",
+    "request": "^2.87.0"
+  },
+  "author": "indrajra",
+  "license": "MIT"
+}

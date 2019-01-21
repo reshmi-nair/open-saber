@@ -36,7 +36,10 @@
         },
         "grade": {
           "$id": "#/properties/grade",
-          "$ref": "Common.json#/definitions/GradeDevCon",
+          "type": "array",
+          "items": {
+            "$ref": "Common.json#/definitions/GradeDevCon"
+          },
           "title": "Class"
         },
         "schoolName": {
