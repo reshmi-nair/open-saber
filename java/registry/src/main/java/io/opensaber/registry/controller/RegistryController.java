@@ -187,7 +187,7 @@ public class RegistryController {
             String label = recordId.toString();
             resultMap.put(dbConnectionInfoMgr.getUuidPropertyName(), label);
 
-            result.put("entity", resultMap);
+            result.put(apiMessage.getRequest().getEntityType(), resultMap);
             response.setResult(result);
             responseParams.setStatus(Response.Status.SUCCESSFUL);
             watch.stop("RegistryController.addToExistingEntity");
@@ -229,7 +229,7 @@ public class RegistryController {
             ITransformer<Object> responseTransformer = transformer.getInstance(config);
             Data<Object> resultContent = responseTransformer.transform(data);
             logger.info("JSON LD: " + resultContent.getData());
-            response.setResult(resultContent.getData());
+//            response.setResult(resultContent.getData());
 
         } catch (Exception e) {
             logger.error("Read Api Exception occurred ", e);
