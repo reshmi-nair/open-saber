@@ -136,7 +136,9 @@ public class RegistryController {
     public ResponseEntity<Response> deleteEntity(@RequestHeader HttpHeaders header) {
         ResponseParams responseParams = new ResponseParams();
         Response response = new Response(Response.API_ID.DELETE, "OK", responseParams);
-        try {
+        response.setResult("DevCon - why delete?");
+
+        /*try {
             String entityId = apiMessage.getRequest().getRequestMap().get(dbConnectionInfoMgr.getUuidPropertyName()).toString();
             RecordIdentifier recordId = RecordIdentifier.parse(entityId);
             String shardId = dbConnectionInfoMgr.getShardId(recordId.getShardLabel());
@@ -154,7 +156,8 @@ public class RegistryController {
             response.setResult(null);
             responseParams.setStatus(Response.Status.UNSUCCESSFUL);
             responseParams.setErrmsg("Meh ! You encountered an error!");
-        }
+        }*/
+
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
