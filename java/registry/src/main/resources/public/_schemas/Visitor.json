@@ -21,8 +21,7 @@
       "type": "object",
       "title": "The visitor Schema",
       "required": [
-        "name",
-        "qrCode"
+        "name"
       ],
       "optional": [
         "signatures",
@@ -47,11 +46,6 @@
             "$ref": "Vote.json#/definitions/Vote"
           },
           "$comment": "Placeholder for all votes this visitor put"
-        },
-        "qrCode": {
-          "$id": "#/properties/qrCode",
-          "type": "string",
-          "$comment": "Code"
         },
         "org": {
           "$id": "#/properties/org",

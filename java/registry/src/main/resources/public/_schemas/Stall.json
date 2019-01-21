@@ -22,23 +22,9 @@
       "title": "The stall Schema",
       "required": [
         "name",
-        "id",
         "ideas"
       ],
       "properties": {
-        "id": {
-          "$id": "#/properties/id",
-          "type": "integer",
-          "$comment": "Stall identifier - please use these ids only against your stall",
-          "examples": [
-            "1 - Creation",
-            "2 - ClassRoom",
-            "3 - StaffRoom",
-            "4 - AdminOffice",
-            "5 - NOC",
-            "6 - Bazaar"
-          ]
-        },
         "name": {
           "$id": "#/properties/name",
           "type": "string",
