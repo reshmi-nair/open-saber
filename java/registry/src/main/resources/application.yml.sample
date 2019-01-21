@@ -135,7 +135,7 @@ audit:
     file: ${audit_frame_file:audit_frame.json}
 
 authentication:
-  enabled: ${authentication_enabled:true}
+  enabled: ${authentication_enabled:false}
 
 keycloak:
   sso:
