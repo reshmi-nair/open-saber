@@ -35,8 +35,8 @@
           "type": "string",
           "enum": [
             "Creation",
-            "ClassRoom",
-            "StaffRoom",
+            "Classroom",
+            "Staffroom",
             "AdminOffice",
             "NOC",
             "Bazaar"
