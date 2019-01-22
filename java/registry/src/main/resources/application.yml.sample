@@ -20,7 +20,7 @@ persistence:
   enabled: ${persistence_enabled:true}
 
 visitor:
-  idStart: 999
+  idStart: 500
 
 registry:
   context:
