@@ -83,6 +83,8 @@ public class RegistryController {
     private static final String VISITOR_CODE_STR = "VIS";
     private static final String CODE_STR = "code";
     private static final String CODE_UUID_FILENAME_STR = "entity.json";
+    private static final String ROLE_CODE_STR = "roleCode";
+    private static final String STALL_CODE_STR = "stallCode";
 
     private ObjectNode codeUUIDNode;
 
@@ -239,11 +241,14 @@ public class RegistryController {
         Response response = new Response(Response.API_ID.CREATE, "OK", responseParams);
         Map<String, Object> result = new HashMap<>();
         String entityType = apiMessage.getRequest().getEntityType();
-        String codeGenerated = VISITOR_CODE_STR + getVisitorIdNext();
+        String code;
         String jsonString;
 
         if (entityType.equals(VISITOR_STR)) {
-            apiMessage.getRequest().addField(CODE_STR, codeGenerated);
+            code = VISITOR_CODE_STR + getVisitorIdNext();
+            apiMessage.getRequest().addField(CODE_STR, code);
+        } else {
+            code = apiMessage.getRequest().getRequestMapNode().get(entityType).get(CODE_STR).asText();
         }
         jsonString = apiMessage.getRequest().getRequestMapAsString(entityType.equals(VISITOR_STR));
 
@@ -260,12 +265,12 @@ public class RegistryController {
             RecordIdentifier recordId = new RecordIdentifier(shard.getShardLabel(), resultId);
             Map resultMap = new HashMap();
             String label = recordId.toString();
+
             resultMap.put(dbConnectionInfoMgr.getUuidPropertyName(), label);
-            if (entityType.equals(VISITOR_STR)) {
-                resultMap.put(CODE_STR, codeGenerated);
-            }
-            logger.info("Added " + codeGenerated + " -> " + resultId + " into entity.json map");
-            codeUUIDNode.put(codeGenerated, resultId);
+            resultMap.put(CODE_STR, code);
+
+            logger.info("Added " + code + " -> " + resultId + " into entity.json map");
+            codeUUIDNode.put(code, resultId);
 
             result.put(apiMessage.getRequest().getEntityType(), resultMap);
             response.setResult(result);
@@ -324,7 +329,12 @@ public class RegistryController {
     public ResponseEntity<Response> devconRead(@RequestHeader HttpHeaders header) throws IOException {
         ResponseParams responseParams = new ResponseParams();
         Response response = new Response(Response.API_ID.READ, "OK", responseParams);
-        String code = (String) apiMessage.getRequest().getRequestMap().get("code");
+        String code = apiMessage.getRequest().getRequestMapNode().get("code").asText();
+
+        // At the time of login, there will be extra fields sent.
+        JsonNode roleCode = apiMessage.getRequest().getRequestMapNode().get(ROLE_CODE_STR);
+        JsonNode stallCode = apiMessage.getRequest().getRequestMapNode().get(STALL_CODE_STR);
+
         JsonNode osid = codeUUIDNode.get(code);
 
         RecordIdentifier recordId = RecordIdentifier.parse(osid.textValue());
