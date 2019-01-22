@@ -407,7 +407,12 @@ public class RegistryController {
         logger.info("Loading key values " + "");
 
         try {
-            populateCodeUUIDNode(reqMap.has("append"), (ObjectNode) reqMap.get("append"));
+            ObjectNode appendJson = (ObjectNode) reqMap.get("append");
+            if(appendJson == null) {
+                populateCodeUUIDNode(reqMap.has("append"), (ObjectNode) reqMap);
+            } else {
+                populateCodeUUIDNode(reqMap.has("append"), (ObjectNode) reqMap.get("append"));
+            }
         } catch (Exception e) {
             logger.error("load Api Exception occurred ", e);
             responseParams.setErr(e.getMessage());
@@ -418,14 +423,22 @@ public class RegistryController {
 
     @ResponseBody
     @RequestMapping(value = "/update", method = RequestMethod.POST)
-    public ResponseEntity<Response> updateTP2Graph() {
+    public ResponseEntity<Response> updateTP2Graph() throws IOException {
+        String label =  null;
         ResponseParams responseParams = new ResponseParams();
         Response response = new Response(Response.API_ID.UPDATE, "OK", responseParams);
 
         String jsonString = apiMessage.getRequest().getRequestMapAsString();
         String entityType = apiMessage.getRequest().getEntityType();
 
-        String label = apiMessage.getRequest().getRequestMapNode().get(entityType).get(uuidPropertyName).asText();
+        JsonNode labelNode  = apiMessage.getRequest().getRequestMapNode().get(entityType).get(uuidPropertyName);
+        if(labelNode != null){
+            label = labelNode.asText();
+        } else {
+            String code = apiMessage.getRequest().getRequestMapNode().get(entityType).get("code").asText();
+            label = codeUUIDNode.get(code).asText();
+        }
+
         RecordIdentifier recordId = RecordIdentifier.parse(label);
         String shardId = dbConnectionInfoMgr.getShardId(recordId.getShardLabel());
         shardManager.activateShard(shardId);
@@ -454,4 +467,40 @@ public class RegistryController {
         populateCodeUUIDNode(false, codeUUIDNode);
     }
 
+
+    @ResponseBody
+    @RequestMapping(value = "/update-dev", method = RequestMethod.POST)
+    public ResponseEntity<Response> updateTP2GraphDev() throws IOException {
+        ResponseParams responseParams = new ResponseParams();
+        Response response = new Response(Response.API_ID.UPDATE, "OK", responseParams);
+
+        String jsonString = apiMessage.getRequest().getRequestMapAsString();
+        String entityType = apiMessage.getRequest().getEntityType();
+
+        //String label = apiMessage.getRequest().getRequestMapNode().get(entityType).get(uuidPropertyName).asText();
+        String code = apiMessage.getRequest().getRequestMapNode().get(entityType).get("code").asText();
+        InputStream is = this.getClass().getClassLoader().getResourceAsStream("entity.json");
+        JsonNode newNode = objectMapper.readTree(is);
+        JsonNode osid = newNode.get(code);
+        RecordIdentifier recordId = RecordIdentifier.parse(osid.textValue());
+        String shardId = dbConnectionInfoMgr.getShardId(recordId.getShardLabel());
+        shardManager.activateShard(shardId);
+        logger.info("Read Api: shard id: " + recordId.getShardLabel() + " for label: " + osid.textValue());
+
+        logger.info("Update Api: shard id: " + recordId.getShardLabel() + " for uuid: " + recordId.getUuid());
+
+        try {
+            watch.start("RegistryController.update");
+            registryService.updateEntity(recordId.getUuid(), jsonString);
+            responseParams.setErrmsg("");
+            responseParams.setStatus(Response.Status.SUCCESSFUL);
+            watch.stop("RegistryController.update");
+            logger.debug("RegistryController: entity updated !");
+        } catch (Exception e) {
+            logger.error("RegistryController: Exception while updating entity (without id)!", e);
+            responseParams.setStatus(Response.Status.UNSUCCESSFUL);
+            responseParams.setErrmsg(e.getMessage());
+        }
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
 }
