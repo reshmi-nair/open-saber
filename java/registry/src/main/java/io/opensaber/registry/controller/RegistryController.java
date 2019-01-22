@@ -18,14 +18,7 @@ import io.opensaber.registry.sink.shard.ShardManager;
 import io.opensaber.registry.transform.*;
 import io.opensaber.registry.util.ReadConfigurator;
 import io.opensaber.registry.util.RecordIdentifier;
-
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.lang.reflect.Type;
-import java.util.HashMap;
-import java.util.Map;
-
+import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +27,15 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import javax.annotation.PreDestroy;
+import javax.websocket.server.PathParam;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.lang.reflect.Type;
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 public class RegistryController {
@@ -78,6 +80,39 @@ public class RegistryController {
     private static final String VISITOR_STR = "Visitor";
     private static final String VISITOR_CODE_STR = "VIS";
     private static final String CODE_STR = "code";
+    private static final String CODE_UUID_FILENAME_STR = "entity.json";
+
+    private ObjectNode codeUUIDNode;
+
+    private void populateCodeUUIDNode(boolean shouldAppend, ObjectNode values) {
+        try {
+            InputStream is = this.getClass().getClassLoader().getResourceAsStream(CODE_UUID_FILENAME_STR);
+            String filePath = this.getClass().getClassLoader().getResource(CODE_UUID_FILENAME_STR).getPath();
+            String fileDir = filePath.substring(0, filePath.lastIndexOf("/"));
+
+            String bkpName = CODE_UUID_FILENAME_STR + DateTime.now().toString();
+            String bkpFileName = fileDir + "/" + bkpName;
+
+            ObjectNode oldNode = (ObjectNode) objectMapper.readTree(is);
+            ObjectNode newNode = objectMapper.convertValue(values, ObjectNode.class);
+
+            logger.info("Code_UUID backup - Taking backup (shouldAppend: " + shouldAppend + ":)" + bkpFileName);
+            objectMapper.writeValue(new File(bkpFileName), oldNode);
+
+            if (shouldAppend) {
+                ObjectNode merged = oldNode;
+                merged.setAll(newNode);
+                codeUUIDNode = merged;
+            } else {
+                codeUUIDNode = newNode;
+            }
+
+            // Writing the entity.json here
+            objectMapper.writeValue(new File(filePath), codeUUIDNode);
+        } catch (IOException ioe) {
+            logger.info("Can't load entity code uuid mapping");
+        }
+    }
 
     /**
      * Note: Only one mime type is supported at a time. Pick up the first mime
@@ -213,6 +248,7 @@ public class RegistryController {
                 resultMap.put(CODE_STR, codeGenerated);
             }
 
+
             result.put(apiMessage.getRequest().getEntityType(), resultMap);
             response.setResult(result);
             responseParams.setStatus(Response.Status.SUCCESSFUL);
@@ -255,7 +291,7 @@ public class RegistryController {
             ITransformer<Object> responseTransformer = transformer.getInstance(config);
             Data<Object> resultContent = responseTransformer.transform(data);
             logger.info("JSON LD: " + resultContent.getData());
-//            response.setResult(resultContent.getData());
+            response.setResult(resultContent.getData());
 
         } catch (Exception e) {
             logger.error("Read Api Exception occurred ", e);
@@ -271,9 +307,7 @@ public class RegistryController {
         ResponseParams responseParams = new ResponseParams();
         Response response = new Response(Response.API_ID.READ, "OK", responseParams);
         String code = (String) apiMessage.getRequest().getRequestMap().get("code");
-        InputStream is = this.getClass().getClassLoader().getResourceAsStream("entity.json");
-        JsonNode newNode = objectMapper.readTree(is);
-        JsonNode osid = newNode.get(code);
+        JsonNode osid = codeUUIDNode.get(code);
 
         RecordIdentifier recordId = RecordIdentifier.parse(osid.textValue());
         String shardId = dbConnectionInfoMgr.getShardId(recordId.getShardLabel());
@@ -307,28 +341,60 @@ public class RegistryController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
+    @RequestMapping(value = "/read-dev/{code}", method = RequestMethod.GET)
+    public ResponseEntity<Response> devconRead2(@RequestHeader HttpHeaders header,
+                                                @PathParam("code") String code) throws IOException {
+        ResponseParams responseParams = new ResponseParams();
+        Response response = new Response(Response.API_ID.READ, "OK", responseParams);
+        JsonNode osid = codeUUIDNode.get(code);
+
+        RecordIdentifier recordId = RecordIdentifier.parse(osid.textValue());
+        String shardId = dbConnectionInfoMgr.getShardId(recordId.getShardLabel());
+        shardManager.activateShard(shardId);
+        logger.info("Read Api: shard id: " + recordId.getShardLabel() + " for label: " + osid.asText());
+
+        String acceptType = header.getAccept().iterator().next().toString();
+
+        ReadConfigurator configurator = new ReadConfigurator();
+        boolean includeSignatures = false;
+        configurator.setIncludeSignatures(includeSignatures);
+        configurator.setIncludeTypeAttributes(acceptType.equals(Constants.LD_JSON_MEDIA_TYPE));
+
+        try {
+            JsonNode resultNode = registryService.getEntity(recordId.getUuid(), configurator);
+            // Transformation based on the mediaType
+            Data<Object> data = new Data<>(resultNode);
+            Configuration config = configurationHelper.getConfiguration(acceptType, Direction.OUT);
+            logger.info("config : " + config);
+            ITransformer<Object> responseTransformer = transformer.getInstance(config);
+            Data<Object> resultContent = responseTransformer.transform(data);
+            logger.info("JSON LD: " + resultContent.getData());
+            response.setResult(resultContent.getData());
+
+        } catch (Exception e) {
+            logger.error("Read-devcon Api Exception occurred ", e);
+            responseParams.setErr(e.getMessage());
+            responseParams.setStatus(Response.Status.UNSUCCESSFUL);
+        }
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+
     @RequestMapping(value = "/load", method = RequestMethod.POST)
     public ResponseEntity<Response> loadConfig(@RequestHeader HttpHeaders header) {
         ResponseParams responseParams = new ResponseParams();
         Response response = new Response(Response.API_ID.LOAD, "OK", responseParams);
-        Map<String, Object> reqMap =  apiMessage.getRequest().getRequestMap();
-        try{
-            String fileName = this.getClass().getClassLoader().getResource("entity.json").getPath();
-            if(reqMap.containsKey("append")){
-                InputStream is = this.getClass().getClassLoader().getResourceAsStream("entity.json");
-                ObjectNode newNode = (ObjectNode) objectMapper.readTree(is);
-                ObjectNode node = objectMapper.convertValue(reqMap.get("append"), ObjectNode.class);
-                newNode.setAll(node);
-                objectMapper.writeValue(new File(fileName),newNode);
-            } else {
-                objectMapper.writeValue(new File(fileName),reqMap);
-            }
+
+        JsonNode reqMap =  apiMessage.getRequest().getRequestMapNode();
+        logger.info("Loading key values " + "");
+
+        try {
+            populateCodeUUIDNode(reqMap.has("append"), (ObjectNode) reqMap.get("append"));
         } catch (Exception e) {
             logger.error("load Api Exception occurred ", e);
             responseParams.setErr(e.getMessage());
             responseParams.setStatus(Response.Status.UNSUCCESSFUL);
         }
-        logger.debug("Loaded key values");
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
@@ -363,4 +429,11 @@ public class RegistryController {
         }
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
+
+    @PreDestroy
+    public void beforeShutdown() {
+        logger.info("Before shutting down controller, overwriting code uuid map");
+        populateCodeUUIDNode(false, codeUUIDNode);
+    }
+
 }
