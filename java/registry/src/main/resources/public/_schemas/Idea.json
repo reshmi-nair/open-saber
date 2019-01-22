@@ -25,10 +25,11 @@
         "name",
         "description"
       ],
+      "additionalProperties": false,
       "properties": {
         "code": {
           "$id": "#/properties/code",
-          "type": "integer",
+          "type": "string",
           "$comment": "Idea identifier"
         },
          "name": {

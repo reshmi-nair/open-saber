@@ -1,5 +1,6 @@
 package io.opensaber.registry.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
@@ -245,7 +246,13 @@ public class RegistryController {
         String jsonString;
 
         if (entityType.equals(VISITOR_STR)) {
-            code = VISITOR_CODE_STR + getVisitorIdNext();
+            // For test and offline registration visitors that we may add ourselves.
+            JsonNode temp = apiMessage.getRequest().getRequestMapNode().get(entityType).get(CODE_STR);
+            if (temp != null) {
+                code = temp.textValue();
+            } else {
+                code = VISITOR_CODE_STR + getVisitorIdNext();
+            }
             apiMessage.getRequest().addField(CODE_STR, code);
         } else {
             code = apiMessage.getRequest().getRequestMapNode().get(entityType).get(CODE_STR).asText();
@@ -254,7 +261,7 @@ public class RegistryController {
 
         try {
             JsonNode entityData = (JsonNode) apiMessage.getRequest().getRequestMapNode().get(entityType);
-            //logger.info("Add api: entity type " +  + " and shard propery: " + shardManager.getShardProperty());
+            //logger.info("Add api: entity type " +  + " and shard property: " + shardManager.getShardProperty());
             logger.info("request: " + entityData.get(shardManager.getShardProperty()));
             Object attribute = entityData.get(shardManager.getShardProperty());
             logger.info("attribute " + attribute);
@@ -325,6 +332,31 @@ public class RegistryController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
+    /**
+     *
+     * @param vcode visitor code
+     * @param roleCode TCH1, STU1, PAR1 like codes
+     * @param stallCode STA1..6 like codes
+     */
+    private void createVisitorActivityEntry(String vcode, String roleCode, String stallCode) {
+        ObjectNode visitorActivityRecord = JsonNodeFactory.instance.objectNode();
+        ObjectNode visitorActivity = JsonNodeFactory.instance.objectNode();
+        visitorActivity.put("visitorCode", vcode);
+        visitorActivity.put("roleCode", roleCode);
+        visitorActivity.put("stallCode", stallCode);
+
+        visitorActivityRecord.set("VisitorActivity", visitorActivity);
+        try {
+            String jsonStr = new ObjectMapper().writeValueAsString(visitorActivityRecord);
+            String resultId = registryService.addEntity(jsonStr);
+            logger.info("Created visitor activity record for " + resultId + "-> " + vcode + ":" + roleCode + ":" + stallCode);
+        } catch (JsonProcessingException jpe) {
+            logger.error("JsonProcessException - Can't add a visitor activity for " + vcode + ":" + roleCode + ":" + stallCode);
+        } catch (Exception e) {
+            logger.error("Exception - Can't add a visitor activity for " + vcode + ":" + roleCode + ":" + stallCode);
+        }
+    }
+
     @RequestMapping(value = "/read-dev", method = RequestMethod.POST)
     public ResponseEntity<Response> devconRead(@RequestHeader HttpHeaders header) throws IOException {
         ResponseParams responseParams = new ResponseParams();
@@ -334,6 +366,13 @@ public class RegistryController {
         // At the time of login, there will be extra fields sent.
         JsonNode roleCode = apiMessage.getRequest().getRequestMapNode().get(ROLE_CODE_STR);
         JsonNode stallCode = apiMessage.getRequest().getRequestMapNode().get(STALL_CODE_STR);
+
+        if (roleCode != null && stallCode != null) {
+            // Create a visitorActivity entry
+            shardManager.getShard(null);
+            createVisitorActivityEntry(code, roleCode.textValue(), stallCode.textValue());
+        }
+        shardManager.getShard(null);
 
         JsonNode osid = codeUUIDNode.get(code);
 
@@ -371,7 +410,7 @@ public class RegistryController {
 
     @RequestMapping(value = "/read-dev/{code}", method = RequestMethod.GET)
     public ResponseEntity<Response> devconRead2(@RequestHeader HttpHeaders header,
-                                                @PathParam("code") String code) throws IOException {
+                                                @PathVariable("code") String code) throws IOException {
         ResponseParams responseParams = new ResponseParams();
         Response response = new Response(Response.API_ID.READ, "OK", responseParams);
         JsonNode osid = codeUUIDNode.get(code);

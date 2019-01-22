@@ -23,6 +23,7 @@
         "ideaId",
         "nCoins"
       ],
+      "additionalProperties": false,
       "properties": {
         "timestamp": {
           "$id": "#/properties/timestamp",
@@ -43,7 +44,7 @@
         },
         "nCoins": {
           "$id": "#/properties/nonce",
-          "type": "string",
+          "type": "integer",
           "$comment": "Number of coins voted against this idea"
         },
         "rating" : {

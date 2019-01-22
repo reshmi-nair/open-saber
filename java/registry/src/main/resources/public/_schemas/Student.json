@@ -21,6 +21,7 @@
         "grade",
         "schoolName"
       ],
+      "additionalProperties": false,
       "properties": {
         "signatures": {
           "$id": "#/properties/signatures",

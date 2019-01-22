@@ -1,0 +1,61 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "type": "object",
+  "properties": {
+    "Visitor": {
+      "$ref": "#/definitions/Visitor"
+    }
+  },
+  "required": [
+    "VisitorActivity"
+  ],
+  "title":"VisitorActivity",
+  "_osConfig": {
+    "osComment": [],
+    "privateFields": [],
+    "signedFields": []
+  },
+  "definitions": {
+    "VisitorActivity": {
+      "$id": "#/properties/VisitorActivity",
+      "type": "object",
+      "title": "The VisitorActivity Schema",
+      "required": [
+        "signatures",
+        "visitorCode",
+        "roleCode",
+        "timestamp"
+      ],
+      "additionalProperties": false,
+      "optional": [
+      ],
+      "properties": {
+        "signatures": {
+          "$id": "#/properties/signatures",
+          "type": "array",
+          "items": {
+            "$ref": "Signature.json#/definitions/Signature"
+          },
+          "$comment": "Placeholder for all verifiable claims"
+        },
+        "visitorCode": {
+          "$id": "#/properties/visitorCode",
+          "$comment": "visitor code"
+        },
+        "roleCode": {
+          "$id": "#/properties/roleCode",
+          "$comment": "role code"
+        },
+        "timestamp" : {
+          "type": "string",
+          "format": "date-time",
+          "$comment": "Timestamp",
+          "default": "",
+          "examples": [
+            "2017-09-23T20:21:34Z"
+          ]
+        }
+      }
+    }
+  }
+}

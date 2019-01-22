@@ -30,6 +30,7 @@
         "coinsGiven",
         "votes"
       ],
+      "additionalProperties": false,
       "properties": {
         "signatures": {
           "$id": "#/properties/signatures",

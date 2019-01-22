@@ -23,8 +23,10 @@
       "required": [
         "code",
         "name",
+        "floor",
         "ideas"
       ],
+      "additionalProperties": false,
       "properties": {
         "code": {
           "$id": "#/properties/stallCode",
@@ -42,6 +44,16 @@
             "Bazaar"
           ],
           "title": "Stall name"
+        },
+        "floor": {
+          "$id": "#/properties/name",
+          "type": "string",
+          "enum": [
+            "1st Floor",
+            "2nd Floor",
+            "3rd Floor",
+            "4th Floor"
+          ]
         },
         "ideas": {
           "$id": "#/properties/ideaCode",
