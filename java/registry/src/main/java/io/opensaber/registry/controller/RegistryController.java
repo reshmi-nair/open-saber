@@ -2,6 +2,7 @@ package io.opensaber.registry.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -28,6 +29,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.websocket.server.PathParam;
 import java.io.File;
@@ -83,6 +85,21 @@ public class RegistryController {
     private static final String CODE_UUID_FILENAME_STR = "entity.json";
 
     private ObjectNode codeUUIDNode;
+
+    @PostConstruct
+    public void loadCodeUUIDMap() {
+        InputStream is = this.getClass().getClassLoader().getResourceAsStream(CODE_UUID_FILENAME_STR);
+        try {
+            codeUUIDNode = (ObjectNode) objectMapper.readTree(is);
+        } catch (Exception e) {
+            logger.info("Can't read existing code uuid maps");
+        } finally {
+            if (codeUUIDNode == null) {
+                logger.info("Empty entity.json");
+                codeUUIDNode = JsonNodeFactory.instance.objectNode();
+            }
+        }
+    }
 
     private void populateCodeUUIDNode(boolean shouldAppend, ObjectNode values) {
         try {
@@ -247,7 +264,8 @@ public class RegistryController {
             if (entityType.equals(VISITOR_STR)) {
                 resultMap.put(CODE_STR, codeGenerated);
             }
-
+            logger.info("Added " + codeGenerated + " -> " + resultId + " into entity.json map");
+            codeUUIDNode.put(codeGenerated, resultId);
 
             result.put(apiMessage.getRequest().getEntityType(), resultMap);
             response.setResult(result);
