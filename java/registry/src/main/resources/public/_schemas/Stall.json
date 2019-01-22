@@ -41,7 +41,8 @@
             "Staffroom",
             "AdminOffice",
             "NOC",
-            "Bazaar"
+            "Bazaar",
+            "Home"
           ],
           "title": "Stall name"
         },
