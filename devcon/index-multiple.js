@@ -16,6 +16,7 @@ var teacherEntities = {}
 var studentEntities = {}
 var parentEntities = {}
 var stallEntities = {}
+var visitorEntities = {}
 
 var invoke_add = function (nIter, payload, callback) {
     var addSuffix = "add"
@@ -79,8 +80,8 @@ var populate_add_tasks = function (tasks, entityType, static_payload, arrDynamic
         //async.eachSeries(arrDynamicData, function (oneCSVRow, callback) {
         var completePayload = JSON.parse(JSON.stringify(static_payload))
         var oneCSVRow = JSON.parse(JSON.stringify(arrDynamicData[itr]))
-
-        //console.log("one row = " + JSON.stringify(oneCSVRow))
+        console.log("PAYLOAD COmplete",JSON.stringify(static_payload))
+        console.log("one row = " + JSON.stringify(oneCSVRow))
 
         var attrsMerged = Object.assign(completePayload["request"][entityType], oneCSVRow)
         completePayload["request"][entityType] = attrsMerged
@@ -125,6 +126,8 @@ var populate_add_tasks = function (tasks, entityType, static_payload, arrDynamic
         delete dataPortion.ActualTeacher
         delete dataPortion.ActualParent
         delete dataPortion.FetchedCode
+       // delete dataPortion.ideaDescription
+
         allPayloads.push(completePayload)
     }
 
@@ -211,6 +214,20 @@ var parentPayload = {
         }
     }
 }
+var visitorPayload = {
+    "id": "open-saber.registry.create",
+    "request": {
+        "Visitor": {
+        }
+    }
+}
+var stallPayload = {
+    "id": "open-saber.registry.create",
+    "request": {
+        "Stall": {
+        }
+    }
+}
 
 function populateTeacher(cb) {
     var teacher_tasks = []
@@ -236,7 +253,68 @@ function populateParent(cb) {
     execute_tasks(parent_tasks, "Parent_entity.json", parentEntities, cb)
 }
 
-// populateTeacher(function(err, data) {
+function populateVisitor(cb) {
+    var visitor_tasks = [];
+    var visitorCSV = csvToJson('Data - Visitor.csv')
+    populate_add_tasks(visitor_tasks, "Visitor", visitorPayload, visitorCSV, visitorEntities)
+    console.log("Total number of Visitor = " + visitor_tasks.length)
+    execute_tasks(visitor_tasks, "Visitor_entity.json", visitorEntities, cb)
+}
+
+function getOneIdea(oneLine) {
+    var newIdea = {}
+                newIdea.code = oneLine["ideaCode"]
+                newIdea.name = oneLine["ideaName"]
+                newIdea.description = oneLine["ideaDescription"]
+                return newIdea
+}
+
+function populateStallIdeas(cb) {
+    var stall_tasks = [];
+    var combinedInfo = []
+    var uniqueStalls = {}
+    var stallCSV = csvToJson('Data - Stall-Ideas.csv')
+    console.log(JSON.stringify(stallCSV))
+
+    // stallCSV contains multiple 
+    if (Array.isArray(stallCSV)) {
+        for (var idx in stallCSV) {
+          
+            console.log(JSON.stringify(stallCSV[idx]["code"]))
+
+            var isAlreadyPresent = uniqueStalls.hasOwnProperty(stallCSV[idx]["code"])
+            if (isAlreadyPresent) {
+                console.log(idx["code"] + " already present")
+                var ideasArr = combinedInfo[uniqueStalls[stallCSV[idx]["code"]]].ideas
+                console.log("IdeasArr Before Pushing",ideasArr)
+                var newIdea = getOneIdea(stallCSV[idx])
+                ideasArr.push(newIdea)
+                console.log("IdeasArr",ideasArr)
+            } else {
+                var ideaArr = []
+                var idxToAdd = combinedInfo.length
+
+                var newIdea = getOneIdea(stallCSV[idx])
+                ideaArr.push(newIdea)
+                var stallObj = {}
+                stallObj.code = stallCSV[idx]["code"]
+                stallObj.name = stallCSV[idx]["name"]
+                stallObj.floor = stallCSV[idx]["floor"]
+                stallObj.ideas = ideaArr
+                
+                console.log("Adding " + stallCSV[idx]["code"] + " into uniqueStalls")
+                uniqueStalls[stallCSV[idx]["code"]] = idxToAdd
+                combinedInfo.push(stallObj)
+            }
+        }
+    }
+    console.log(JSON.stringify(combinedInfo))
+    cb(null)
+    populate_add_tasks(stall_tasks, "Stall", stallPayload, combinedInfo, stallEntities)
+    console.log("Total number of Stall = " + stall_tasks.length)
+    execute_tasks(stall_tasks, "Stall_entity.json", stallEntities, cb)
+}
+// populateStallIdeas(function(err, data) {
 //     if (err) {
 //         console.log("some error man")
 //     }
@@ -245,7 +323,9 @@ function populateParent(cb) {
 async.series([
     populateTeacher,
     populateStudent,
-    populateParent
+    populateParent,
+    populateVisitor,
+    populateStallIdeas
 ], (result, err) => {
     console.log("errror = ", err);
     console.log("Results", result);
