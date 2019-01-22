@@ -21,9 +21,9 @@
       "type": "object",
       "title": "The stall Schema",
       "required": [
-        "code",
-        "name",
-        "description"
+        "ideaCode",
+        "ideaName",
+        "ideaDescription"
       ],
       "additionalProperties": false,
       "properties": {
