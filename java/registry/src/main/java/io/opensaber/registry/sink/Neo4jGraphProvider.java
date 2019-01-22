@@ -13,6 +13,7 @@ import org.apache.tinkerpop.gremlin.structure.Edge;
 import org.apache.tinkerpop.gremlin.structure.Graph;
 import org.apache.tinkerpop.gremlin.structure.Transaction;
 import org.apache.tinkerpop.gremlin.structure.Vertex;
+import org.neo4j.driver.v1.AuthToken;
 import org.neo4j.driver.v1.AuthTokens;
 import org.neo4j.driver.v1.Driver;
 import org.neo4j.driver.v1.GraphDatabase;
@@ -32,9 +33,10 @@ public class Neo4jGraphProvider extends DatabaseProvider {
 		profilerEnabled = connection.isProfilerEnabled();
 		setProvider(Constants.GraphDatabaseProvider.NEO4J);
 		setUuidPropertyName(uuidPropName);
+		
+		AuthToken authToken = AuthTokens.basic(connection.getUsername(), connection.getPassword());
+		driver = GraphDatabase.driver(connection.getUri(), authToken);
 
-		// TODO: Check with auth
-		driver = GraphDatabase.driver(connection.getUri(), AuthTokens.none());
 		neo4jIdProvider.setUuidPropertyName(getUuidPropertyName());
 		logger.info("Initialized db driver at {}", connectionInfo.getUri());
 	}
