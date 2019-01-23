@@ -288,8 +288,6 @@ public class RegistryController {
             responseParams.setStatus(Response.Status.SUCCESSFUL);
             watch.stop("RegistryController.addToExistingEntity");
             logger.debug("RegistryController : Entity {} added !", resultId);
-
-            populateCodeUUIDNode(true, codeUUIDNode);
         } catch (Exception e) {
             logger.error("Exception in controller while adding entity !", e);
             response.setResult(result);
