@@ -10,7 +10,7 @@ var fs = require("fs");
 var path = require("path");
 var csvjson = require('csvjson');
 
-var baseUrl = "http://10.0.1.193:8080"
+var baseUrl = "http://127.0.0.1:8080"
 var PARALLEL_LIMIT = 1;
 var teacherEntities = {}
 var studentEntities = {}
@@ -331,7 +331,7 @@ var instance2_setup_functions = [populateTeacher,populateStudent,populateParent]
 
 // Driver - change this instance url depending on the need
 var whatToHit = baseUrl
-var func_array = null
+var func_array = instance2_setup_functions
 console.log("INSATNSCE1_SETUP",instance1_setup_functions)
 // Execution phase
 baseUrl = whatToHit
