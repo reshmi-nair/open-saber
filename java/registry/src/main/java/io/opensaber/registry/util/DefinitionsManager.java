@@ -34,7 +34,7 @@ public class DefinitionsManager {
     public void loadDefinition() throws Exception {
 
         final ObjectMapper mapper = new ObjectMapper();
-        Resource[] resources = definitionsReader.getResources("classpath:public/_schemas/*.json");
+        Resource[] resources = definitionsReader.getResources("classpath:\\public\\_schemas\\*.json");
         for (Resource resource : resources) {
             String jsonContent = getContent(resource);
             JsonNode jsonNode = mapper.readTree(jsonContent);
