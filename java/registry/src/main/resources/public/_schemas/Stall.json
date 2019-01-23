@@ -57,7 +57,7 @@
           ]
         },
         "ideas": {
-          "$id": "#/properties/ideaCode",
+          "$id": "#/properties/ideas",
           "type": "array",
           "items": {
             "$ref": "Idea.json#/definitions/Idea"

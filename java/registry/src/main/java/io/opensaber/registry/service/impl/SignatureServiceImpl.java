@@ -63,6 +63,23 @@ public class SignatureServiceImpl implements SignatureService {
 		return result;
 	}
 
+	public Object sign(Object propertyValue, int keyId)
+			throws SignatureException.UnreachableException, SignatureException.CreationException {
+		ResponseEntity<String> response = null;
+		Object result = null;
+		try {
+			response = restTemplate.postForEntity(signURL + "/" + keyId, propertyValue, String.class);
+			result = new Gson().fromJson(response.getBody(), Object.class);
+		} catch (RestClientException ex) {
+			logger.error("RestClientException when signing: ", ex);
+			throw new SignatureException().new UnreachableException(ex.getMessage());
+		} catch (Exception e) {
+			logger.error("RestClientException when signing: ", e);
+			throw new SignatureException().new CreationException(e.getMessage());
+		}
+		return result;
+	}
+
 	@Override
 	public Object verify(Object propertyValue)
 			throws SignatureException.UnreachableException, SignatureException.VerificationException {

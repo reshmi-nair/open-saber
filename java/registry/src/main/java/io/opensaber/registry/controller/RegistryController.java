@@ -32,11 +32,12 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
-import javax.websocket.server.PathParam;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Type;
+import java.time.Instant;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -344,6 +345,7 @@ public class RegistryController {
         visitorActivity.put("visitorCode", vcode);
         visitorActivity.put("roleCode", roleCode);
         visitorActivity.put("stallCode", stallCode);
+        visitorActivity.put("timestamp", Instant.now().toString());
 
         visitorActivityRecord.set("VisitorActivity", visitorActivity);
         try {
@@ -363,7 +365,8 @@ public class RegistryController {
         Response response = new Response(Response.API_ID.READ, "OK", responseParams);
         String code = apiMessage.getRequest().getRequestMapNode().get("code").asText();
 
-        // At the time of login, there will be extra fields sent.
+        // At the time of login, there will be extra fields sent. We are not validating here
+        // and so extra fields is ok.
         JsonNode roleCode = apiMessage.getRequest().getRequestMapNode().get(ROLE_CODE_STR);
         JsonNode stallCode = apiMessage.getRequest().getRequestMapNode().get(STALL_CODE_STR);
 

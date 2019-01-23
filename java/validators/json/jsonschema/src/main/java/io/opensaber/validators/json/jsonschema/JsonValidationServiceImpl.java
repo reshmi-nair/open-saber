@@ -45,7 +45,7 @@ public class JsonValidationServiceImpl implements IValidate {
 		} else {
 			Schema schema;
 			try {
-				Resource resource = resourceLoader.getResource("classpath:/public/_schemas/" + entityType + ".json");
+				Resource resource = resourceLoader.getResource("classpath:\\public\\_schemas\\" + entityType + ".json");
 				InputStream schemaStream = resource.getInputStream();
 
 				JSONObject rawSchema = new JSONObject(new JSONTokener(schemaStream));

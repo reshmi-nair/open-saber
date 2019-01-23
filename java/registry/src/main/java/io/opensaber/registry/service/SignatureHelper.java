@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import java.time.Instant;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -43,6 +44,26 @@ public class SignatureHelper {
         return signedRoot;
     }
 
+    /** Signs the entity and returns the entity with signed json appending
+     * @param rootNode
+     * @return
+     * @throws SignatureException.UnreachableException
+     * @throws SignatureException.CreationException
+     */
+    public JsonNode signJson(JsonNode rootNode, int keyId) throws SignatureException.UnreachableException, SignatureException.CreationException {
+        JsonNode signedRoot = rootNode;
+        Map signReq = new HashMap<String, Object>();
+        signReq.put("entity", rootNode);
+        Map<String, Object> signMap = (Map<String, Object>) signatureService.sign(signReq, keyId);
+
+        String entityType = rootNode.fieldNames().next();
+        ObjectNode entityNode = (ObjectNode) rootNode.get(entityType);
+        JsonNode signNode = entityNode.get(Constants.SIGNATURES_STR);
+        signNode = mergeSign(entityType, signNode, signMap);
+        entityNode.set(Constants.SIGNATURES_STR,signNode);
+        return signedRoot;
+    }
+
     /** Merges sign data to entity json
      * @param entityType
      * @param signNode
@@ -60,7 +81,7 @@ public class SignatureHelper {
         entitySignMap.put(Constants.SIGN_CREATOR, signatureKeyURl + signMap.get("keyId"));
         entitySignMap.put(Constants.SIGNATURE_FOR, entityType);
         entitySignMap.put(Constants.TYPE_STR_JSON_LD, "RSASignature2018");
-        entitySignMap.put(Constants.SIGN_CREATED_TIMESTAMP, "");
+        entitySignMap.put(Constants.SIGN_CREATED_TIMESTAMP, Instant.now().toString());
         entitySignMap.put(Constants.SIGN_NONCE, "");
         JsonNode entitySignNode = objectMapper.convertValue(entitySignMap, JsonNode.class);
         parentSignNode.add(entitySignNode);

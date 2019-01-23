@@ -163,6 +163,28 @@ public class RegistryServiceImpl implements RegistryService {
         }
     }
 
+    private int getKeyIdForStall(String stallCode) {
+        int keyId = 2; // some thing from OS pool itself
+        switch ( stallCode) {
+            case "STA1": //"Creation",
+                keyId = 4; break;
+            case "STA2": // "Classroom",
+                keyId = 5; break;
+            case "STA3": // Staffroom",
+                keyId = 6; break;
+            case "STA4": //"Home"
+                keyId = 7; break;
+            case "STA5": //"AdminOffice",
+                keyId = 8; break;
+            case "STA6": //"NOC",
+                keyId = 9; break;
+            case "STA7": //""Bazaar",
+                keyId = 10; break;
+
+        }
+        return keyId;
+    }
+
     public String addEntity(String jsonString) throws Exception {
         String entityId = "entityPlaceholderId";
         ObjectMapper mapper = new ObjectMapper();
@@ -173,6 +195,12 @@ public class RegistryServiceImpl implements RegistryService {
         }
 
         if (signatureEnabled) {
+            // devcon
+            // Check type of data being added and then sign if it is a login action
+            if (rootNode.fieldNames().next().equals("VisitorActivity")) {
+                int key = getKeyIdForStall(rootNode.get(rootNode.fieldNames().next()).get("stallCode").asText());
+                signatureHelper.signJson(rootNode, key);
+            }
             signatureHelper.signJson(rootNode);
         }
 
