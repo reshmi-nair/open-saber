@@ -7,6 +7,10 @@ public interface SignatureService {
 	Object sign(Object propertyValue)
 			throws SignatureException.UnreachableException, SignatureException.CreationException;
 
+	Object sign(Object propertyValue, int keyId)
+			throws SignatureException.UnreachableException, SignatureException.CreationException;
+
+
 	Object verify(Object propertyValue)
 			throws SignatureException.UnreachableException, SignatureException.VerificationException;
 
