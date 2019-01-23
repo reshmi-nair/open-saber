@@ -70,7 +70,7 @@ database:
       #     * 2. Relational databases (Postgresql, HSQLDB, H2, MariaDB, MySQL, MSSQLServer)
       #     ** http://sqlg.org/docs/2.0.0-SNAPSHOT/
       #     ** Example - Postgres - jdbc:postgresql://localhost:5432/yourdb
-      uri: ${connectionInfo_uri:bolt://localhost:7687}
+      uri: ${connectionInfo_uri:bolt://127.0.0.1:7687}
 
       username: ${connectionInfo_username:neo4j}
       password: ${connectionInfo_password:devcon}
@@ -103,11 +103,11 @@ frame:
   file: ${frame_file:frame.json}
 
 encryption:
-  enabled: ${encryption_enabled:true}
-  base: ${encryption_base:http://localhost:8013}
-  uri: ${encryption_uri:http://localhost:8013/encrypt}
+  enabled: ${encryption_enabled:false}
+  base: ${encryption_base:http://52.172.158.244:8013}
+  uri: ${encryption_uri:http://52.172.158.244:8013/encrypt}
   batch:
-    uri: ${encryption_batch_uri:http://localhost:8013/encrypt/obj}
+    uri: ${encryption_batch_uri:http://52.172.158.244:8013/encrypt/obj}
   service:
     connection:
       timeout: ${encryption_service_connection_timeout:5000}
@@ -117,16 +117,16 @@ encryption:
       timeout: ${encryption_service_read_timeout:5000}
 
 decryption:
-  uri: ${decryption_uri:http://localhost:8013/decrypt}
+  uri: ${decryption_uri:http://52.172.158.244:8013/decrypt}
   batch:
-    uri: ${decryption_batch_uri:http://localhost:8013/decrypt/obj}
+    uri: ${decryption_batch_uri:http://52.172.158.244:8013/decrypt/obj}
 
 signature:
   enabled: ${signature_enabled:true}
-  healthCheckURL: ${sign_health_check_url:http://localhost:8013/}
-  signURL: ${sign_url:http://localhost:8013/sign}
-  verifyURL: ${verify_url:http://localhost:8013/verify}
-  keysURL: ${keys_url:http://localhost:8013/keys/}
+  healthCheckURL: ${sign_health_check_url:http://52.172.158.244:8013/}
+  signURL: ${sign_url:http://52.172.158.244:8013/sign}
+  verifyURL: ${verify_url:http://52.172.158.244:8013/verify}
+  keysURL: ${keys_url:http://52.172.158.244:8013/keys/}
   domain: ${domain_url:https://w3id.org/security/v1/}
   schema:
     config:
@@ -201,7 +201,7 @@ frame:
   file: frame.json
 
 encryption:
-  enabled: true
+  enabled: false
   base: https://dev.sunbirded.org/encryption/
   uri: https://dev.sunbirded.org/encryption/encrypt
   batch:
