@@ -42,6 +42,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @RestController
+@CrossOrigin(origins = "*")
 public class RegistryController {
     private static Logger logger = LoggerFactory.getLogger(RegistryController.class);
     @Autowired
@@ -501,6 +502,8 @@ public class RegistryController {
 
         String jsonString = apiMessage.getRequest().getRequestMapAsString();
         String entityType = apiMessage.getRequest().getEntityType();
+
+        logger.info("Update API called " + jsonString);
 
         JsonNode labelNode  = apiMessage.getRequest().getRequestMapNode().get(entityType).get(uuidPropertyName);
         if(labelNode != null){

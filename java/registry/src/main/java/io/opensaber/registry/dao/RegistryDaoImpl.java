@@ -116,7 +116,7 @@ public class RegistryDaoImpl implements IRegistryDao {
             String fieldKey = subEntityField.getKey();
             JsonNode subEntityNode = subEntityField.getValue();
             if (subEntityNode.isValueNode()) {
-                rootVertex.property(fieldKey, subEntityField.getValue().asText());
+                rootVertex.property(fieldKey, ValueType.getValue(subEntityField.getValue()));
             } else if (subEntityNode.isObject()) {
                 parseJsonObject(subEntityNode, graph, rootVertex, fieldKey, false);
             } else if (subEntityNode.isArray()) {
@@ -199,9 +199,9 @@ public class RegistryDaoImpl implements IRegistryDao {
             JsonNode value = subElementNode.getValue();
             String keyType = subElementNode.getKey();
             if (value.isObject()) {
-
+                logger.error("Not updating object here - BUG");
             } else if (value.isValueNode() && !keyType.equals("@type") && !keyType.equals(uuidPropertyName)) {
-                vertex.property(keyType, value.asText());
+                vertex.property(keyType, ValueType.getValue(value));
             }
         });
     }
