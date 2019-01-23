@@ -108,8 +108,7 @@ public class RegistryController {
     private void populateCodeUUIDNode(boolean shouldAppend, ObjectNode values) {
         try {
             InputStream is = this.getClass().getClassLoader().getResourceAsStream(CODE_UUID_FILENAME_STR);
-            String filePath = this.getClass().getClassLoader().getResource(CODE_UUID_FILENAME_STR).getPath();
-            String fileDir = filePath.substring(0, filePath.lastIndexOf("/"));
+            String fileDir = System.getenv("HOME");
 
             String bkpName = CODE_UUID_FILENAME_STR + DateTime.now().toString();
             String bkpFileName = fileDir + "/" + bkpName;
@@ -129,9 +128,13 @@ public class RegistryController {
             }
 
             // Writing the entity.json here
-            objectMapper.writeValue(new File(filePath), codeUUIDNode);
+            String currentFileName = fileDir + "/" + CODE_UUID_FILENAME_STR;
+            objectMapper.writeValue(new File(currentFileName), codeUUIDNode);
+            logger.info("Done writing the current entity filenames");
         } catch (IOException ioe) {
             logger.info("Can't load entity code uuid mapping");
+        } finally {
+            logger.info("Done with all work");
         }
     }
 
@@ -285,6 +288,8 @@ public class RegistryController {
             responseParams.setStatus(Response.Status.SUCCESSFUL);
             watch.stop("RegistryController.addToExistingEntity");
             logger.debug("RegistryController : Entity {} added !", resultId);
+
+            populateCodeUUIDNode(true, codeUUIDNode);
         } catch (Exception e) {
             logger.error("Exception in controller while adding entity !", e);
             response.setResult(result);
