@@ -310,6 +310,7 @@ function populateStallIdeas(cb) {
         }
     }
     console.log(JSON.stringify(combinedInfo))
+   // cb(null)
     populate_add_tasks(stall_tasks, "Stall", stallPayload, combinedInfo, stallEntities)
     console.log("Total number of Stall = " + stall_tasks.length)
     execute_tasks(stall_tasks, "Stall_entity.json", stallEntities, cb)
@@ -322,8 +323,8 @@ function populateStallIdeas(cb) {
 //     }
 // })
 
-var instance1_url = "http://10.0.1.193:8080"
-var instance2_url = "http://10.0.1.193:8081"
+var instance1_url = "http://104.211.78.0:8080"
+var instance2_url = "http://52.172.187.3:8080"
 var instance1_setup_functions = [populateStallIdeas, populateVisitor]
 var instance2_setup_functions = [populateTeacher,populateStudent,populateParent]
 
@@ -340,7 +341,7 @@ if (baseUrl === instance1_url) {
     func_array = instance2_setup_functions
 }
 
-//console.log("Func_Array",func_array);
+console.log("Func_Array",func_array);
 
 async.series(func_array, (result, err) => {
     console.log("errror = ", err);
