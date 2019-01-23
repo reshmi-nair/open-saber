@@ -6,6 +6,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +32,45 @@ public class APIMessage {
 	/* A temporary map to pass data cooked up in the interceptors, modules */
 	private Map<String, Object> localMap = new HashMap<>();
 
+	private static ObjectMapper objectMapper = new ObjectMapper();
+
 	public APIMessage() {}
+
+	protected Request getRequest(Map<String, Object> requestMap) {
+		if (null != requestMap && !requestMap.isEmpty()) {
+            String id = (String) requestMap.get("id");
+            request.setId(id);
+
+            try {
+    			String ver = (String) requestMap.get("ver");
+    			Long ts = (Long) requestMap.get("ets");
+                request.setEts(ts);
+                request.setVer(ver);
+            } catch (Exception e) {
+			    // its ok if people are not sending.
+            }
+
+			Object reqParams = requestMap.get("params");
+			if (null != reqParams) {
+				try {
+					RequestParams params = (RequestParams) objectMapper.convertValue(reqParams, RequestParams.class);
+					request.setParams(params);
+				} catch (Exception e) {
+				}
+			}
+			Object requestObj = requestMap.get("request");
+			if (null != requestObj) {
+				try {
+					String strRequest = objectMapper.writeValueAsString(requestObj);
+					Map<String, Object> map = objectMapper.readValue(strRequest, Map.class);
+					if (null != map && !map.isEmpty())
+						request.setRequestMap(map);
+				} catch (Exception e) {
+				}
+			}
+		}
+		return request;
+	}
 
 	@Autowired
 	public APIMessage(HttpServletRequest servletRequest) {
@@ -39,9 +78,11 @@ public class APIMessage {
 		requestWrapper = new RequestWrapper(servletRequest);
 		String body = requestWrapper.getBody();
 		try {
-			request = new ObjectMapper().readValue(body, Request.class);
+			Map<String, Object> auditMap = new ObjectMapper().readValue(body, new TypeReference<Map<String, Object>>() {
+			});
+			getRequest(auditMap);
 		} catch (IOException jpe) {
-			logger.error("Can't read request body");
+			logger.error("Can't read request body" + jpe);
 			request = null;
 		}
 	}
