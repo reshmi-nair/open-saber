@@ -73,7 +73,7 @@ database:
       uri: ${connectionInfo_uri:bolt://localhost:7687}
 
       username: ${connectionInfo_username:neo4j}
-      password: ${connectionInfo_password:}
+      password: ${connectionInfo_password:devcon}
 
       # Any other shard information follows...
     #-
