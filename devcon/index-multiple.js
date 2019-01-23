@@ -166,6 +166,7 @@ var execute_tasks = function (tasks, fileName, entities, cb) {
                     console.error("FATAL : Error in writing teacher entity " + err)
                     cb(err)
                 }
+                else
                 cb(null);
             })
         } else {
@@ -309,24 +310,39 @@ function populateStallIdeas(cb) {
         }
     }
     console.log(JSON.stringify(combinedInfo))
-    cb(null)
     populate_add_tasks(stall_tasks, "Stall", stallPayload, combinedInfo, stallEntities)
     console.log("Total number of Stall = " + stall_tasks.length)
     execute_tasks(stall_tasks, "Stall_entity.json", stallEntities, cb)
 }
-// populateStallIdeas(function(err, data) {
+
+
+// populateVisitor(function(err, data) {
 //     if (err) {
 //         console.log("some error man")
 //     }
 // })
 
-async.series([
-    populateTeacher,
-    populateStudent,
-    populateParent,
-    populateVisitor,
-    populateStallIdeas
-], (result, err) => {
+var instance1_url = "http://10.0.1.193:8080"
+var instance2_url = "http://10.0.1.193:8081"
+var instance1_setup_functions = [populateStallIdeas, populateVisitor]
+var instance2_setup_functions = [populateTeacher,populateStudent,populateParent]
+
+
+// Driver - change this instance url depending on the need
+var whatToHit = baseUrl
+var func_array = null
+console.log("INSATNSCE1_SETUP",instance1_setup_functions)
+// Execution phase
+baseUrl = whatToHit
+if (baseUrl === instance1_url) {
+    func_array = instance1_setup_functions
+} else if(baseUrl === instance2_url){
+    func_array = instance2_setup_functions
+}
+
+//console.log("Func_Array",func_array);
+
+async.series(func_array, (result, err) => {
     console.log("errror = ", err);
     console.log("Results", result);
     if (err) {
@@ -337,6 +353,16 @@ async.series([
     console.log("result", result);
 })
 
+// async.series([populateVisitor,populateStallIdeas], (result, err) => {
+//         console.log("errror = ", err);
+//         console.log("Results", result);
+//         if (err) {
+//             return (err);
+//             console.log("Errorrrrr==>", err);
+//         }
+//         return result;
+//         console.log("result", result);
+//     })
 
 
 
