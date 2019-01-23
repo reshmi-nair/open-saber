@@ -20,6 +20,7 @@ import io.opensaber.registry.sink.shard.ShardManager;
 import io.opensaber.registry.transform.*;
 import io.opensaber.registry.util.ReadConfigurator;
 import io.opensaber.registry.util.RecordIdentifier;
+import org.apache.jena.atlas.json.JSON;
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,6 +34,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Type;
@@ -92,8 +94,9 @@ public class RegistryController {
 
     @PostConstruct
     public void loadCodeUUIDMap() {
-        InputStream is = this.getClass().getClassLoader().getResourceAsStream(CODE_UUID_FILENAME_STR);
+        String fileDir = System.getenv("HOME");
         try {
+            InputStream is = new FileInputStream(fileDir + "/" + CODE_UUID_FILENAME_STR);
             codeUUIDNode = (ObjectNode) objectMapper.readTree(is);
         } catch (Exception e) {
             logger.info("Can't read existing code uuid maps");
@@ -103,12 +106,18 @@ public class RegistryController {
                 codeUUIDNode = JsonNodeFactory.instance.objectNode();
             }
         }
+
+        try {
+            logger.info("Current entity list = " + new ObjectMapper().writeValueAsString(codeUUIDNode));
+        } catch (Exception e) {
+            logger.info("Can't print entity list");
+        }
     }
 
     private void populateCodeUUIDNode(boolean shouldAppend, ObjectNode values) {
         try {
-            InputStream is = this.getClass().getClassLoader().getResourceAsStream(CODE_UUID_FILENAME_STR);
             String fileDir = System.getenv("HOME");
+            InputStream is = new FileInputStream(fileDir + "/" + CODE_UUID_FILENAME_STR);
 
             String bkpName = CODE_UUID_FILENAME_STR + DateTime.now().toString();
             String bkpFileName = fileDir + "/" + bkpName;
