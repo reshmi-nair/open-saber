@@ -130,6 +130,7 @@ public class RegistryController {
             if (shouldAppend) {
                 ObjectNode merged = oldNode;
                 merged.setAll(newNode);
+                merged.setAll(codeUUIDNode);
                 codeUUIDNode = merged;
             } else {
                 codeUUIDNode = newNode;
@@ -375,6 +376,8 @@ public class RegistryController {
         ResponseParams responseParams = new ResponseParams();
         Response response = new Response(Response.API_ID.READ, "OK", responseParams);
         String code = apiMessage.getRequest().getRequestMapNode().get("code").asText();
+
+        logger.info("Read-dev called with payload " + apiMessage.getRequest().getRequestMapAsString());
 
         // At the time of login, there will be extra fields sent. We are not validating here
         // and so extra fields is ok.
