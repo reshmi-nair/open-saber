@@ -19,9 +19,8 @@
       "type": "object",
       "title": "Vote for the devcon",
       "required": [
-        "timestamp",
-        "ideaId",
-        "nCoins"
+        "ideaCode",
+        "visitorCode"
       ],
       "additionalProperties": false,
       "properties": {
@@ -33,13 +32,20 @@
             "2017-09-23T20:21:34Z"
           ]
         },
-        "ideaId": {
-          "$id": "#/properties/ideaId",
+        "visitorCode": {
+          "$id": "#/properties/ideaCode",
           "type": "string",
-          "format": "uri",
-          "$comment": "URI of the ideaId",
+          "$comment": "idea code",
           "examples": [
-            "https://localhost:8080/<idea_osid>"
+            "VIS1"
+          ]
+        },
+        "ideaCode": {
+          "$id": "#/properties/ideaCode",
+          "type": "string",
+          "$comment": "idea code",
+          "examples": [
+            "IDE1"
           ]
         },
         "nCoins": {

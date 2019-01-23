@@ -38,7 +38,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Type;
 import java.time.Instant;
-import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -88,6 +87,8 @@ public class RegistryController {
     private static final String CODE_UUID_FILENAME_STR = "entity.json";
     private static final String ROLE_CODE_STR = "roleCode";
     private static final String STALL_CODE_STR = "stallCode";
+    private static final String VOTE_STR = "Vote";
+    private static final String VOT_CODE_STR = "VOT";
 
     private ObjectNode codeUUIDNode;
 
@@ -255,25 +256,29 @@ public class RegistryController {
         Response response = new Response(Response.API_ID.CREATE, "OK", responseParams);
         Map<String, Object> result = new HashMap<>();
         String entityType = apiMessage.getRequest().getEntityType();
-        String code;
+        String code = "";
         String jsonString;
 
-        if (entityType.equals(VISITOR_STR)) {
+        if (entityType.equals(VISITOR_STR) || entityType.equals(VOTE_STR)) {
             // For test and offline registration visitors that we may add ourselves.
             JsonNode temp = apiMessage.getRequest().getRequestMapNode().get(entityType).get(CODE_STR);
             if (temp != null) {
                 code = temp.textValue();
-            } else {
+            } else if (entityType.equals(VISITOR_STR)) {
                 code = VISITOR_CODE_STR + getVisitorIdNext();
+            } else if (entityType.equals(VOTE_STR)) {
+                code = VOT_CODE_STR + getVisitorIdNext();
+                apiMessage.getRequest().addField("timestamp", Instant.now().toString());
             }
             apiMessage.getRequest().addField(CODE_STR, code);
+            jsonString = apiMessage.getRequest().getRequestMapAsString(true);
         } else {
             code = apiMessage.getRequest().getRequestMapNode().get(entityType).get(CODE_STR).asText();
+            jsonString = apiMessage.getRequest().getRequestMapAsString(false);
         }
-        jsonString = apiMessage.getRequest().getRequestMapAsString(entityType.equals(VISITOR_STR));
 
         try {
-            JsonNode entityData = (JsonNode) apiMessage.getRequest().getRequestMapNode().get(entityType);
+            JsonNode entityData = apiMessage.getRequest().getRequestMapNode().get(entityType);
             //logger.info("Add api: entity type " +  + " and shard property: " + shardManager.getShardProperty());
             logger.info("request: " + entityData.get(shardManager.getShardProperty()));
             Object attribute = entityData.get(shardManager.getShardProperty());
