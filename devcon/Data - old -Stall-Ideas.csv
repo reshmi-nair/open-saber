@@ -1,0 +1,22 @@
+code,name,floor,ideaCode,ideaName,Owner,ideaDescription
+STA1,Creation,1st Floor,IDE1,Offline Editor,Vinu,Creator can create content even in offline mode 
+STA1,Creation,1st Floor,IDE2,AI Assisted Content Creation,Loganathan,"Appu, the bot can help content creators to create content using pdf and images  "
+STA1,Creation,1st Floor,IDE3,Question Bank Generation,Vivek,Appu can help you to create question sets  based on suggested categories 
+STA1,Creation,1st Floor,IDE4,Taxonomy Enrichment,Rayulu,Make content more discoverable by fetching all the content based on the given keyword and its related keywords. Visitor will see the taxonomy graph and connections
+STA1,Creation,1st Floor,IDE5,Content Curation,Sunil,Auto update of metadata fileds based on content data. helps content creator to find and replace complex words in the content.   
+STA2,Classroom,2nd Floor,IDE6,APPU Classroom,,"Appu helps in  student engagement, perfomance and attendance tracking"
+STA2,Classroom,2nd Floor,IDE7,Multiplayer Quiz,,Appu helps to conduct inter school quiz compition 
+STA2,Classroom,2nd Floor,IDE8,Library (Offline Consumption),,You can now create and consume content in offline mode(It is only applicable to content with ECML format)
+STA2,Classroom,2nd Floor,IDE9,AR/VR Classroom,,Appu helps student to learn using 3D object ( text to object/object to text)
+STA3,Staffroom,2nd Floor,IDE10,Staffroom,,"Review previous Period's class performance, prepare for the next class, assemble course materials semi automatically"
+STA3,Staffroom,2nd Floor,IDE11,Follow up,,"Right after the class, relfect on the class progression, share notes with parents if necessary"
+STA4,Home,3rd Floor,IDE12,Home,,"In the App, parents/gurdian can see their child's academic progress, classroom activity and any given homeworks, all in a unified interface"
+STA5,AdminOffice,3rd Floor,IDE13,Admin Office,,"Demonstrates real-time dashboards from Devcon events. Also, displays feature dashboard usage for Diksha"
+STA5,AdminOffice,3rd Floor,IDE14,Druid Center,,Demonstrates the capability of druid and allows visitors to create adhoc reports on the fly
+STA6,NOC,3rd Floor,IDE15,NOC Center,,"Watch in realtime, how all activities being done the DevCon are powered by computing infrastrucure, and watch out for some SCIFI starwars experience"
+STA7,Bazaar,4th Floor,IDE16,Jedi Academy,,"Scan QR code, get relevant Content from repositories other than DIKSHA"
+STA7,Bazaar,4th Floor,IDE17,Data Room,,"Search for suitable algorithms in the market place, deploy it on the ML workbench in a protected virtual data room"
+STA7,Bazaar,4th Floor,IDE18,Script less automation,,"Using Robotic Process Automation, log-in and log-out of DIKSHA painlessly without keystrokes or code"
+STA7,Bazaar,4th Floor,IDE19,E-Commerce with registry,,Demonstrates how a teacher can use DIKSHA ID in a commercial context and become eligible for select offers
+STA7,Bazaar,4th Floor,IDE20,OpenRAP - Device management,,Demostrates how multiple OpenRAP devices can be Cloud controlled from a single cloud instance. Pushing up content updates or app updates become integral part of this offering.
+STA7,Bazaar,4th Floor,IDE21,Crowd Sourcing,,"A skilled person can curate content, ragardless of his or her affiliations and thus it imrpoves the overal system capability. The content creators get rewarded for their contribution in content."

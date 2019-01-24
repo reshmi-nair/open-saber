@@ -126,8 +126,8 @@ var populate_add_tasks = function (tasks, entityType, static_payload, arrDynamic
         delete dataPortion.ActualTeacher
         delete dataPortion.ActualParent
         delete dataPortion.FetchedCode
-       // delete dataPortion.ideaDescription
-
+        delete dataPortion.Owner
+       
         allPayloads.push(completePayload)
     }
 
@@ -331,7 +331,7 @@ var instance2_setup_functions = [populateTeacher,populateStudent,populateParent]
 
 // Driver - change this instance url depending on the need
 var whatToHit = baseUrl
-var func_array = instance2_setup_functions
+var func_array = []
 console.log("INSATNSCE1_SETUP",instance1_setup_functions)
 // Execution phase
 baseUrl = whatToHit
@@ -339,6 +339,8 @@ if (baseUrl === instance1_url) {
     func_array = instance1_setup_functions
 } else if(baseUrl === instance2_url){
     func_array = instance2_setup_functions
+} else {
+    func_array = []
 }
 
 console.log("Func_Array",func_array);
